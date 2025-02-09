@@ -1,5 +1,6 @@
 package com.github.luckybard.timetracker.listener;
 import com.github.luckybard.timetracker.service.BranchTimeTrackerService;
+import com.github.luckybard.timetracker.ui.TimeTrackerPanel;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.util.messages.MessageBusConnection;
@@ -17,6 +18,7 @@ public class BranchChangeListener implements GitRepositoryChangeListener {
 
     @Override
     public void repositoryChanged(@NotNull GitRepository repository) {
+        System.out.println("Wykryto zmianę repozytorium");
         String newBranch = repository.getCurrentBranchName();
 
         if (newBranch == null) {
@@ -25,9 +27,8 @@ public class BranchChangeListener implements GitRepositoryChangeListener {
         }
 
         if (!newBranch.equals(currentBranch)) {
+            System.out.println("Wykryto nowe repozytorium");
             trackerService.stopTimer(); // Zatrzymanie poprzedniej sesji
-
-            System.out.println("Zmieniono branch na: " + newBranch);
             currentBranch = newBranch;
             trackerService.startTimer(currentBranch); // Rozpoczęcie nowej sesji
         }

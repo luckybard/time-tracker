@@ -10,7 +10,8 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.luckybard.timetracker.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <toolWindow id="Time Tracker" icon="AllIcons.Toolwindows.ToolWindowDebugger"
+                    factoryClass="com.github.luckybard.timetracker.ui.TimeTrackerToolWindowFactory"/>
 
         <projectService serviceImplementation="com.github.luckybard.timetracker.repository.SessionStorage"/>
 

@@ -53,6 +53,15 @@ public class SessionStorage implements PersistentStateComponent<SessionStorage.S
      * @param session Sesja do dodania.
      */
     public void addSession(Session session) {
+        System.out.println("SessionStorage::addSession");
         state.sessions.add(session);
+    }
+
+    /**
+     * Czyści wszystkie zapisane sesje.
+     */
+    public void clearSessions() {
+        state.sessions.clear();
+        System.out.println("SessionStorage::clearSessions - Historia została wyczyszczona.");
     }
 }

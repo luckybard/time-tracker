@@ -2,18 +2,26 @@ package com.github.luckybard.timetracker.service;
 
 import com.github.luckybard.timetracker.model.Session;
 import com.github.luckybard.timetracker.repository.SessionStorage;
+import com.github.luckybard.timetracker.util.InstantFormatter;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
-import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
+
+import static org.apache.commons.lang3.BooleanUtils.isFalse;
 
 @Service(Service.Level.PROJECT)
 public final class BranchTimeTrackerService {
 
-    private final  Project project;
+    private List<Session> sessionHistory;
+
+    private static final Logger log = LoggerFactory.getLogger(BranchTimeTrackerService.class);
+    private final Project project;
     private String branch;
     private Instant startTime;
 
@@ -21,30 +29,35 @@ public final class BranchTimeTrackerService {
         this.project = project;
     }
 
-    private SessionStorage getSessionStorage() {
+    public SessionStorage getSessionStorage() {
         return project.getService(SessionStorage.class);
     }
 
     public void startTimer(String currentBranch) {
+        System.out.println("BranchTimeTrackerService::startTimer");
         branch = currentBranch;
         startTime = Instant.now();
     }
 
     public void stopTimer() {
-        getSessionStorage().addSession(getSession());
-
-        //TODO: Send request to JIRA
+        System.out.println("BranchTimeTrackerService::stopTimer");
+        if (isFalse(branch == null || branch.isEmpty())) {
+            getSessionStorage().addSession(getSession());
+            // TODO: Send request to JIRA
+        }
+        branch = null;
+        startTime = null;
     }
 
     public Session getSession() {
         Session session = new Session()
-                .setId(Long.valueOf(UUID.randomUUID().toString()))
+                .setId(UUID.randomUUID().toString())
                 .setBranch(branch)
-                .setStartTime(startTime.toString())
-                .setEndTime(Instant.now().toString())
-                .setDate(LocalDate.now().toString());
+                .setStartTime(InstantFormatter.formatTime(startTime))
+                .setEndTime(InstantFormatter.formatTime(Instant.now()))
+                .setDate(InstantFormatter.formatDate(Instant.now()))
+                .setDuration();
 
-        startTime = null;
         return session;
     }
 
@@ -52,5 +65,23 @@ public final class BranchTimeTrackerService {
         if (!currentBranch.equals(branch)) {
             stopTimer();
         }
+    }
+
+    public void clearSessionHistory() {
+       getSessionStorage().clearSessions();
+    }
+
+    // Metoda zwracająca aktualny branch
+    public String getCurrentBranch() {
+        return branch;
+    }
+
+    // Metoda zwracająca czas rozpoczęcia sesji
+    public Instant getStartTime() {
+        return startTime;
+    }
+
+    public List<Session> getSessionHistory() {
+        return getSessionStorage().getSessions();
     }
 }
