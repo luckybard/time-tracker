@@ -22,7 +22,5 @@
         <listener
                 class="com.github.luckybard.timetracker.listener.ProjectCloseListener"
                 topic="com.intellij.openapi.project.ProjectManagerListener"/>
-        <listener class="com.github.luckybard.timetracker.listeners.MyApplicationActivationListener"
-                  topic="com.intellij.openapi.application.ApplicationActivationListener"/>
     </applicationListeners>
 </idea-plugin>

@@ -5,7 +5,6 @@ import com.github.luckybard.timetracker.service.BranchTimeTrackerService;
 import javax.swing.*;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 
 public class TimeTrackerController {
     private final BranchTimeTrackerService trackerService;
@@ -40,7 +39,7 @@ public class TimeTrackerController {
     }
 
     private void updateSessionTable() {
-        components.getSessionTable().updateTable(trackerService.getSessionHistory());
+        components.getSessionTable().updateTable();
     }
 
     private void stopTracking() {
@@ -51,7 +50,7 @@ public class TimeTrackerController {
 
     private void clearHistory() {
         trackerService.clearSessionHistory(); // Musisz zaimplementować czyszczenie historii w serwisie
-        components.getSessionTable().updateTable(List.of()); // Możesz zaktualizować tabelę, aby usunąć wpisy
+        components.getSessionTable().clearHistory(); // Możesz zaktualizować tabelę, aby usunąć wpisy
         JOptionPane.showMessageDialog(null, "Historia została wyczyszczona!");
     }
 }

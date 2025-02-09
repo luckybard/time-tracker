@@ -15,7 +15,7 @@ public class TimeTrackerPanel {
 
     public TimeTrackerPanel(Project project) {
         BranchTimeTrackerService trackerService = project.getService(BranchTimeTrackerService.class);
-        this.components = new TimeTrackerComponents();
+        this.components = new TimeTrackerComponents(project);
         this.controller = new TimeTrackerController(trackerService, components);
 
         panel = new JPanel(new BorderLayout());
