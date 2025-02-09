@@ -5,14 +5,23 @@
     <vendor>luckybard</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>Git4Idea</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.github.luckybard.timetracker.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+
+        <projectService serviceImplementation="com.github.luckybard.timetracker.repository.SessionStorage"/>
+
+        <postStartupActivity implementation="com.github.luckybard.timetracker.main.PluginProjectActivity"/>
     </extensions>
 
     <applicationListeners>
-        <listener class="com.github.luckybard.timetracker.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
+        <listener
+                class="com.github.luckybard.timetracker.listener.ProjectCloseListener"
+                topic="com.intellij.openapi.project.ProjectManagerListener"/>
+        <listener class="com.github.luckybard.timetracker.listeners.MyApplicationActivationListener"
+                  topic="com.intellij.openapi.application.ApplicationActivationListener"/>
     </applicationListeners>
 </idea-plugin>
