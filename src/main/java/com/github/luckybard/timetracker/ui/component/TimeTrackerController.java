@@ -50,7 +50,7 @@ public class TimeTrackerController {
 
     private void clearHistory() {
         trackerService.clearSessionHistory(); // Musisz zaimplementować czyszczenie historii w serwisie
-        components.getSessionTable().clearHistory(); // Możesz zaktualizować tabelę, aby usunąć wpisy
+        components.getSessionTable().clearTable(); // Możesz zaktualizować tabelę, aby usunąć wpisy
         JOptionPane.showMessageDialog(null, "Historia została wyczyszczona!");
     }
 }

@@ -23,11 +23,11 @@ public class TimeTrackerTable {
         table = new JBTable(tableModel);
 
         initializeButtons();
-        updateTable(); // Wczytanie danych na start
+        updateTable();
     }
 
     public void updateTable() {
-        clearTable(); // Czyszczenie tabeli
+        clearTable();
         List<Session> sessions = trackerService.getSessionStorage().getSessions();
         for (Session session : sessions) {
             tableModel.addRow(new Object[]{
@@ -43,25 +43,23 @@ public class TimeTrackerTable {
         }
     }
 
-    private void clearTable() {
+    private void initializeButtons() {
+        table.getColumn("Edit").setCellRenderer(new ButtonRenderer());
+        table.getColumn("Edit").setCellEditor(new ButtonEditor(new JCheckBox(), "Edit", trackerService, this::updateTable));
+        table.getColumn("Delete").setCellRenderer(new ButtonRenderer());
+        table.getColumn("Delete").setCellEditor(new ButtonEditor(new JCheckBox(), "Delete", trackerService, this::updateTable));
+    }
+
+    public void clearTable() {
         tableModel.setRowCount(0);
     }
 
-    public void clearHistory() {
-        clearTable(); // Usunięcie wszystkich wierszy z tabeli
-    }
-
     private String formatDuration(Duration duration) {
-        return String.format("%02d:%02d:%02d",
-                duration.toHours(), duration.toMinutesPart(), duration.toSecondsPart());
+        return String.format("%02d:%02d:%02d", duration.toHours(), duration.toMinutesPart(), duration.toSecondsPart());
     }
 
     public JScrollPane getTableScrollPane() {
         return new JBScrollPane(table);
-    }
-
-    public JTable getTable() {
-        return table;
     }
 
     private static class ButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
@@ -169,12 +167,5 @@ public class TimeTrackerTable {
                 table.repaint(); // Odśwież UI
             });
         }
-}
-    private void initializeButtons() {
-        table.getColumn("Edit").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Edit").setCellEditor(new ButtonEditor(new JCheckBox(), "Edit", trackerService, this::updateTable));
-        table.getColumn("Delete").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Delete").setCellEditor(new ButtonEditor(new JCheckBox(), "Delete", trackerService, this::updateTable));
     }
-
 }
