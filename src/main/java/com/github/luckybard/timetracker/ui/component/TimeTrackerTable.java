@@ -143,9 +143,9 @@ public class TimeTrackerTable {
 
                 if (result == JOptionPane.OK_OPTION) {
                     session.setBranch(branchField.getText());
-                    session.setDate(dateField.getText()); // Może wymagać parsowania na LocalDate
-                    session.setStartTime(startTimeField.getText()); // Może wymagać parsowania na LocalTime
-                    session.setEndTime(endTimeField.getText()); // Może wymagać parsowania na LocalTime
+                    session.setDate(dateField.getText());
+                    session.setStartTime(startTimeField.getText());
+                    session.setEndTime(endTimeField.getText());
                     reloadTable.run();
                 }
             }
@@ -156,15 +156,14 @@ public class TimeTrackerTable {
 
             String sessionId = (String) tableModel.getValueAt(row, 0);
 
-            // Usuń sesję z listy przechowywanej w serwisie
-            trackerService.getSessionStorage().getSessions().removeIf(s -> s.getId().equals(sessionId));
+            trackerService.getSessionStorage().getSessions()
+                    .removeIf(s -> s.getId().equals(sessionId));
 
-            // Odśwież model tabeli
             SwingUtilities.invokeLater(() -> {
                 tableModel.removeRow(row);
-                tableModel.fireTableStructureChanged(); // Wymusza pełną rekonstrukcję tabeli
-                initializeButtons(); // Ponowne zainicjalizowanie rendererów i edytorów
-                table.repaint(); // Odśwież UI
+                tableModel.fireTableStructureChanged();
+                initializeButtons();
+                table.repaint();
             });
         }
     }

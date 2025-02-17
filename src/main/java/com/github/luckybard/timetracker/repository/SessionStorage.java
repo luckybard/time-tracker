@@ -12,9 +12,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Klasa przechowująca listę sesji w sposób trwały.
- */
 @State(
         name = "SessionStorage",
         storages = {@Storage("SessionStorage.xml")}
@@ -22,7 +19,6 @@ import java.util.List;
 public class SessionStorage implements PersistentStateComponent<SessionStorage.State> {
 
     public static class State {
-        // Używamy XCollection do przechowywania listy obiektów Session
         @XCollection(elementName = "session")
         public List<Session> sessions = new ArrayList<>();
     }
@@ -40,28 +36,15 @@ public class SessionStorage implements PersistentStateComponent<SessionStorage.S
         this.state = state;
     }
 
-    /**
-     * Zwraca listę zapisanych sesji.
-     */
     public List<Session> getSessions() {
         return state.sessions;
     }
 
-    /**
-     * Dodaje nową sesję do przechowywanego stanu.
-     *
-     * @param session Sesja do dodania.
-     */
     public void addSession(Session session) {
-        System.out.println("SessionStorage::addSession");
         state.sessions.add(session);
     }
 
-    /**
-     * Czyści wszystkie zapisane sesje.
-     */
     public void clearSessions() {
         state.sessions.clear();
-        System.out.println("SessionStorage::clearSessions - Historia została wyczyszczona.");
     }
 }

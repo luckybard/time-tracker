@@ -10,7 +10,6 @@ public class ProjectCloseListener implements ProjectManagerListener {
     @Override
     public void projectClosing(@NotNull Project project) {
         BranchTimeTrackerService service = project.getService(BranchTimeTrackerService.class);
-        // Wymuszamy zapisanie ostatniego czasu
         service.stopTimer();
     }
 }
