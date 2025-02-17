@@ -14,7 +14,7 @@ public class Session implements Serializable {
     private String startTime;
     /*** HH:mm:ss ***/
     private String endTime;
-    private String duration;
+    private boolean isSentToJira;
 
     public String getId() {
         return id;
@@ -61,8 +61,12 @@ public class Session implements Serializable {
         return this;
     }
 
-    public Session setDuration() {
-        this.duration = getDuration().toString();
+    public boolean isSentToJira() {
+        return isSentToJira;
+    }
+
+    public Session setSentToJira(boolean sentToJira) {
+        this.isSentToJira = sentToJira;
         return this;
     }
 
@@ -73,5 +77,13 @@ public class Session implements Serializable {
         LocalTime end = LocalTime.parse(endTime, timeFormatter);
 
         return Duration.between(start, end);
+    }
+
+    public String getDurationAsString() {
+        Duration duration = getDuration();
+        long hours = duration.toHours();
+        long minutes = duration.minusHours(hours).toMinutes();
+
+        return 0 == hours ? minutes + "m" : hours + "h " + minutes + "m";
     }
 }

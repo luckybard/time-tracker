@@ -50,6 +50,8 @@ dependencies {
         // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
         plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
 
+        implementation("com.squareup.okhttp3:okhttp:4.9.3")
+
         instrumentationTools()
         pluginVerifier()
         zipSigner()

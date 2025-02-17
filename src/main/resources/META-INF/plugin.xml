@@ -14,6 +14,7 @@
                     factoryClass="com.github.luckybard.timetracker.ui.TimeTrackerToolWindowFactory"/>
 
         <projectService serviceImplementation="com.github.luckybard.timetracker.repository.SessionStorage"/>
+        <projectService serviceImplementation="com.github.luckybard.timetracker.config.PluginProperties"/>
 
         <postStartupActivity implementation="com.github.luckybard.timetracker.main.PluginProjectActivity"/>
     </extensions>
