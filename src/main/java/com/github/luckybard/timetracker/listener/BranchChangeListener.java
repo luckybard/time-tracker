@@ -18,19 +18,16 @@ public class BranchChangeListener implements GitRepositoryChangeListener {
 
     @Override
     public void repositoryChanged(@NotNull GitRepository repository) {
-        System.out.println("Wykryto zmianę repozytorium");
         String newBranch = repository.getCurrentBranchName();
 
         if (newBranch == null) {
-            System.out.println("Brak aktywnego brancha lub HEAD jest odłączony.");
             return;
         }
 
         if (!newBranch.equals(currentBranch)) {
-            System.out.println("Wykryto nowe repozytorium");
-            trackerService.stopTimer(); // Zatrzymanie poprzedniej sesji
+            trackerService.stopTimer();
             currentBranch = newBranch;
-            trackerService.startTimer(currentBranch); // Rozpoczęcie nowej sesji
+            trackerService.startTimer(currentBranch);
         }
     }
 

@@ -40,7 +40,6 @@ public final class BranchTimeTrackerService {
     }
 
     public void stopTimer() {
-        System.out.println("BranchTimeTrackerService::stopTimer");
         if (isFalse(branch == null || branch.isEmpty())) {
             getSessionStorage().addSession(getSession());
             // TODO: Send request to JIRA
@@ -71,12 +70,10 @@ public final class BranchTimeTrackerService {
        getSessionStorage().clearSessions();
     }
 
-    // Metoda zwracająca aktualny branch
     public String getCurrentBranch() {
         return branch;
     }
 
-    // Metoda zwracająca czas rozpoczęcia sesji
     public Instant getStartTime() {
         return startTime;
     }

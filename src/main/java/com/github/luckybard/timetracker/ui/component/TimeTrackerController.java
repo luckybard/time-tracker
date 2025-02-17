@@ -44,13 +44,13 @@ public class TimeTrackerController {
 
     private void stopTracking() {
         trackerService.stopTimer();
-        JOptionPane.showMessageDialog(null, "Czas wysłany do JIRA!");
         updateSessionTable();
+        JOptionPane.showMessageDialog(null, "Czas wysłany do JIRA!");
     }
 
     private void clearHistory() {
-        trackerService.clearSessionHistory(); // Musisz zaimplementować czyszczenie historii w serwisie
-        components.getSessionTable().clearTable(); // Możesz zaktualizować tabelę, aby usunąć wpisy
+        trackerService.clearSessionHistory();
         JOptionPane.showMessageDialog(null, "Historia została wyczyszczona!");
+        components.getSessionTable().clearTable();
     }
 }

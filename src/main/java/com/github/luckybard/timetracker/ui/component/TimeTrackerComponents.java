@@ -8,7 +8,7 @@ public class TimeTrackerComponents {
     private final JLabel branchLabel = new JLabel("Aktualny śledzony branch: -");
     private final JLabel elapsedTimeLabel = new JLabel("Czas: 00:00:00");
     private final JButton stopTrackingButton = new JButton("Zatrzymaj i wyślij do JIRA");
-    private final JButton clearHistoryButton = new JButton("Wyczyść historię"); // Nowy przycisk
+    private final JButton clearHistoryButton = new JButton("Wyczyść historię");
     private final TimeTrackerTable sessionTable;
 
     public TimeTrackerComponents(Project project) {

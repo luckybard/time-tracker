@@ -8,9 +8,12 @@ public class Session implements Serializable {
 
     private String id;
     private String branch;
-    private String date;      // "YYYY-MM-DD"
-    private String startTime; // "HH:mm:ss"
-    private String endTime; // "HH:mm:ss"
+    /*** YYYY-MM-DD ***/
+    private String date;
+    /*** HH:mm:ss ***/
+    private String startTime;
+    /*** HH:mm:ss ***/
+    private String endTime;
     private String duration;
 
     public String getId() {
