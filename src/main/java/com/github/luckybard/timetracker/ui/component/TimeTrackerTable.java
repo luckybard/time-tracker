@@ -19,7 +19,7 @@ public class TimeTrackerTable {
 
     public TimeTrackerTable(Project project) {
         this.trackerService = project.getService(BranchTimeTrackerService.class);
-        tableModel = new DefaultTableModel(new String[]{"ID", "Branch", "Date", "Start Time", "End Time", "Duration", "Edit", "Delete"}, 0);
+        tableModel = new DefaultTableModel(new String[]{"ID", "Branch", "Date", "Start Time", "End Time", "Duration", "Send to Jira", "Edit", "Delete"}, 0);
         table = new JBTable(tableModel);
 
         initializeButtons();
@@ -37,17 +37,22 @@ public class TimeTrackerTable {
                     session.getStartTime(),
                     session.getEndTime(),
                     formatDuration(session.getDuration()),
-                    "Edit",
-                    "Delete"
+                    session.isSentToJira() ? "Sent to Jira" : "Send to Jira",  // Dynamicznie zmieniamy tekst
+                    "Edit",  // Przycisk "Edit"
+                    "Delete" // Przycisk "Delete"
             });
         }
     }
 
     private void initializeButtons() {
+        table.getColumn("Send to Jira").setCellRenderer(new ButtonRenderer());
+        table.getColumn("Send to Jira").setCellEditor(new ColumnButtonEditor(new JCheckBox(), "Send to Jira", trackerService, this::updateTable));
+
         table.getColumn("Edit").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Edit").setCellEditor(new ButtonEditor(new JCheckBox(), "Edit", trackerService, this::updateTable));
+        table.getColumn("Edit").setCellEditor(new ColumnButtonEditor(new JCheckBox(), "Edit", trackerService, this::updateTable));
+
         table.getColumn("Delete").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Delete").setCellEditor(new ButtonEditor(new JCheckBox(), "Delete", trackerService, this::updateTable));
+        table.getColumn("Delete").setCellEditor(new ColumnButtonEditor(new JCheckBox(), "Delete", trackerService, this::updateTable));
     }
 
     public void clearTable() {
@@ -62,6 +67,7 @@ public class TimeTrackerTable {
         return new JBScrollPane(table);
     }
 
+    // Renderer dla przycisków (w kolumnach)
     private static class ButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
         public ButtonRenderer() {
             setOpaque(true);
@@ -70,23 +76,29 @@ public class TimeTrackerTable {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             setText((value == null) ? "" : value.toString());
+            if (value != null && value.equals("Sent to Jira")) {
+                setEnabled(false);
+            } else {
+                setEnabled(true);
+            }
             return this;
         }
     }
 
-    private class ButtonEditor extends DefaultCellEditor {
+    private class ColumnButtonEditor extends DefaultCellEditor {
         private final JButton button;
         private String label;
         private boolean isClicked;
         private final BranchTimeTrackerService trackerService;
         private final Runnable reloadTable;
 
-        public ButtonEditor(JCheckBox checkBox, String label, BranchTimeTrackerService trackerService, Runnable reloadTable) {
+        public ColumnButtonEditor(JCheckBox checkBox, String label, BranchTimeTrackerService trackerService, Runnable reloadTable) {
             super(checkBox);
             this.button = new JButton();
             this.button.setOpaque(true);
             this.trackerService = trackerService;
             this.reloadTable = reloadTable;
+            this.label = label;
             this.button.setText(label);
             this.button.addActionListener(e -> fireEditingStopped());
         }
@@ -95,6 +107,7 @@ public class TimeTrackerTable {
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             this.label = (value == null) ? "" : value.toString();
             this.isClicked = true;
+
             return button;
         }
 
@@ -106,13 +119,40 @@ public class TimeTrackerTable {
                 if (column == table.getColumn("Edit").getModelIndex()) {
                     editSession(row);
                 } else if (column == table.getColumn("Delete").getModelIndex()) {
-                    deleteSession(row);
+                    if(confirmAction("Czy na pewno chcesz usunąć?", "Usuwanie")){
+                        deleteSession(row);
+                    }
+                } else if (column == table.getColumn("Send to Jira").getModelIndex()) {
+                    if(confirmAction("Czy na pewno chcesz wysłać?", "Wysłanie")){
+                        sendToJira(row);
+                    }
                 }
             }
             isClicked = false;
-            return label;
+            return label; // Zwracamy etykietę przycisku
         }
 
+        private void sendToJira(int row) {
+            if (row < 0 || row >= tableModel.getRowCount()) return;
+
+            String sessionId = (String) tableModel.getValueAt(row, 0);
+            Session session = trackerService.getSessionStorage().getSessions().stream()
+                    .filter(s -> s.getId().equals(sessionId))
+                    .findFirst()
+                    .orElse(null);
+
+            if (session != null && !session.isSentToJira()) {
+                boolean success = trackerService.sendSessionToJira(session);
+                if (success) {
+                    session.setSentToJira(true); // Ustawienie statusu sesji na wysłaną do JIRA
+                    updateTable(); // Odświeżenie tabeli, aby zaktualizować stan
+                } else {
+                    JOptionPane.showMessageDialog(null, "Błąd podczas wysyłania do JIRA.");
+                }
+            }
+        }
+
+        // Edycja sesji
         private void editSession(int row) {
             if (row < 0 || row >= tableModel.getRowCount()) return;
 
@@ -151,6 +191,7 @@ public class TimeTrackerTable {
             }
         }
 
+        // Usuwanie sesji
         private void deleteSession(int row) {
             if (row < 0 || row >= tableModel.getRowCount()) return;
 
@@ -167,4 +208,10 @@ public class TimeTrackerTable {
             });
         }
     }
+
+    public boolean confirmAction(String message, String title) {
+        int confirm = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
+        return confirm == JOptionPane.YES_OPTION;
+    }
+
 }
