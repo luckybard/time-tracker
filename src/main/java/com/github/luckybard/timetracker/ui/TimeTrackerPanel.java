@@ -16,15 +16,23 @@ public class TimeTrackerPanel {
     public TimeTrackerPanel(Project project) {
         BranchTimeTrackerService trackerService = project.getService(BranchTimeTrackerService.class);
         this.components = new TimeTrackerComponents(project);
-        this.controller = new TimeTrackerController(trackerService, components);
+        this.controller = new TimeTrackerController(project, trackerService, components);
 
         panel = new JPanel(new BorderLayout());
 
-        JPanel topPanel = new JPanel(new GridLayout(4, 1));
+        JPanel trackingButtons = new JPanel(new GridLayout(1,2));
+        trackingButtons.add(components.getStartTrackingButton());
+        trackingButtons.add(components.getStopTrackingButton());
+
+        JPanel settingsButtons = new JPanel(new GridLayout(1,4)); // Added new button for global settings
+        settingsButtons.add(components.getClearHistoryButton());
+        settingsButtons.add(components.getGlobalSettingsButton());  // New settings button
+
+        JPanel topPanel = new JPanel(new GridLayout(5, 1)); // Increased grid size
         topPanel.add(components.getBranchLabel());
         topPanel.add(components.getElapsedTimeLabel());
-        topPanel.add(components.getStopTrackingButton());
-        topPanel.add(components.getClearHistoryButton());
+        topPanel.add(trackingButtons,BorderLayout.AFTER_LAST_LINE);
+        topPanel.add(settingsButtons,BorderLayout.AFTER_LAST_LINE);
 
         panel.add(topPanel, BorderLayout.NORTH);
         panel.add(components.getSessionTable().getTableScrollPane(), BorderLayout.CENTER);
