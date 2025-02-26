@@ -7,6 +7,8 @@ import com.github.luckybard.timetracker.repository.SessionStorage;
 import com.github.luckybard.timetracker.util.InstantFormatter;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
+import git4idea.repo.GitRepository;
+import git4idea.repo.GitRepositoryManager;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +26,13 @@ public final class BranchTimeTrackerService {
     private JiraClient jiraClient;
     private PluginProperties pluginProperties;
     private SessionStorage sessionStorage;
+    private Project project;
 
     public BranchTimeTrackerService(@NotNull Project project) {
         this.jiraClient = project.getService(JiraClient.class);
         this.pluginProperties = project.getService(PluginProperties.class);
         this.sessionStorage = project.getService(SessionStorage.class);
+        this.project = project;
     }
 
     public SessionStorage getSessionStorage() {
@@ -103,7 +107,11 @@ public final class BranchTimeTrackerService {
     }
 
     public String getCurrentBranch() {
-        return branch;
+        GitRepository gitRepository = GitRepositoryManager.getInstance(project).getRepositories().stream().findFirst().orElse(null);
+        if(gitRepository != null){
+           return gitRepository.getCurrentBranch().getName();
+        }
+        return "";
     }
 
     public Instant getStartTime() {

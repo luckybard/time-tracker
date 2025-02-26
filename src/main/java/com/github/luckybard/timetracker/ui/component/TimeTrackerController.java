@@ -24,7 +24,7 @@ public class TimeTrackerController {
         components.getStopTrackingButton().addActionListener(e -> stopTracking());
         components.getStartTrackingButton().addActionListener(e -> startTracking());
         components.getClearHistoryButton().addActionListener(e -> clearHistory());
-        components.getGlobalSettingsButton().addActionListener(e -> openGlobalSettings()); // Handler for global settings button
+        components.getGlobalSettingsButton().addActionListener(e -> openGlobalSettings());
 
         uiUpdateTimer = new Timer(1000, e -> updateUI());
         uiUpdateTimer.start();
@@ -36,6 +36,8 @@ public class TimeTrackerController {
 
         Instant startTime = trackerService.getStartTime();
         if (startTime != null) {
+            components.getStartTrackingButton().setEnabled(false);
+            components.getStopTrackingButton().setEnabled(true);
             Duration elapsed = Duration.between(startTime, Instant.now());
             components.getElapsedTimeLabel().setText(String.format("Czas: %02d:%02d:%02d",
                     elapsed.toHours(), elapsed.toMinutesPart(), elapsed.toSecondsPart()));
@@ -50,16 +52,19 @@ public class TimeTrackerController {
         components.getSessionTable().updateTable();
     }
 
-    private void stopTracking() {
-        trackerService.stopTimer();
-        updateSessionTable();
-        JOptionPane.showMessageDialog(null, "Sesja zakończona");
-    }
-
-
     private void startTracking() {
         trackerService.startTimer(trackerService.getCurrentBranch());
+        components.getStartTrackingButton().setEnabled(false);
+        components.getStopTrackingButton().setEnabled(true);
         updateSessionTable();
+    }
+
+    private void stopTracking() {
+        trackerService.stopTimer();
+        components.getStartTrackingButton().setEnabled(true);
+        components.getStopTrackingButton().setEnabled(false);
+        updateSessionTable();
+        JOptionPane.showMessageDialog(null, "Sesja zakończona");
     }
 
     private void clearHistory() {
