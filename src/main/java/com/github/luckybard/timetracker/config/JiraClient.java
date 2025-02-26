@@ -1,15 +1,21 @@
 package com.github.luckybard.timetracker.config;
 
+import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Base64;
 
-public class JiraClient {
+@Service(Service.Level.PROJECT)
+public final class JiraClient {
+
+    public static final String WORKLOG_ENDPOINT = "/worklog";
+    public static final String COMMENT_ENDPOINT = "/comment";
 
     private static final OkHttpClient client = new OkHttpClient();
-    private Project project;
+    private final Project project;
 
     public JiraClient(@NotNull Project project) {
         this.project= project;
@@ -21,57 +27,40 @@ public class JiraClient {
 
     public boolean sendJiraUpdate(String issueKey, String timeSpent, String comment) {
         try {
-            // Wysyłanie zarówno aktualizacji czasu, jak i komentarza
-            boolean timeUpdated = updateIssueTime(issueKey, timeSpent);
-            boolean commentAdded = addCommentToIssue(issueKey, comment);
-
-            return timeUpdated && commentAdded; // Zwraca true, jeśli obie operacje zakończą się sukcesem
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    private boolean updateIssueTime(String issueKey, String timeSpent) {
-        String jsonBody = "{"
-                + "\"timeSpent\":\"" + timeSpent + "\""
-                + "}";
-
-        RequestBody body = RequestBody.create(
-                jsonBody,
-                MediaType.get("application/json")
-        );
-
-        Request request = new Request.Builder()
-                .url(getSettings().getJiraUrl() + "/rest/api/2/issue/" + issueKey + "/worklog")
-                .header("Authorization", "Basic " + getAuthHeader())
-                .post(body)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            return response.isSuccessful();
+            return updateIssueTime(issueKey, timeSpent) && addCommentToIssue(issueKey, comment);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error while updating Jira: " + e.getMessage());
             return false;
         }
     }
 
-    private boolean addCommentToIssue(String issueKey, String comment) {
-        String jsonBody = "{"
-                + "\"body\":\"" + comment + "\""
-                + "}";
+    private boolean updateIssueTime(String issueKey, String timeSpent) throws IOException {
+        String jsonBody = createJsonBody("timeSpent", timeSpent);
+        Request request = buildRequest(issueKey, WORKLOG_ENDPOINT, jsonBody);
 
-        RequestBody body = RequestBody.create(
-                jsonBody,
-                MediaType.get("application/json")
-        );
+        return executeRequest(request);
+    }
 
-        Request request = new Request.Builder()
-                .url(getSettings().getJiraUrl() + "/rest/api/2/issue/" + issueKey + "/comment")
+    private boolean addCommentToIssue(String issueKey, String comment) throws IOException {
+        String jsonBody = createJsonBody("body", comment);
+        Request request = buildRequest(issueKey, COMMENT_ENDPOINT, jsonBody);
+
+        return executeRequest(request);
+    }
+
+    private String createJsonBody(String key, String value) {
+        return "{" + "\"" + key + "\":\"" + value + "\"}";
+    }
+
+    private Request buildRequest(String issueKey, String endpoint, String jsonBody) {
+        return new Request.Builder()
+                .url(getSettings().getJiraUrl() + "/rest/api/2/issue/" + issueKey + endpoint)
                 .header("Authorization", "Basic " + getAuthHeader())
-                .post(body)
+                .post(RequestBody.create(jsonBody, MediaType.get("application/json")))
                 .build();
+    }
 
+    private boolean executeRequest(Request request) throws IOException {
         try (Response response = client.newCall(request).execute()) {
             return response.isSuccessful();
         } catch (IOException e) {
@@ -82,6 +71,6 @@ public class JiraClient {
 
     private String getAuthHeader() {
         String credentials = getSettings().getUsername() + ":" + getSettings().getApiToken();
-        return java.util.Base64.getEncoder().encodeToString(credentials.getBytes());
+        return Base64.getEncoder().encodeToString(credentials.getBytes());
     }
 }

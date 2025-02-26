@@ -14,77 +14,92 @@ import org.slf4j.LoggerFactory;
 import java.time.Instant;
 import java.util.UUID;
 
-import static org.apache.commons.lang3.BooleanUtils.isFalse;
-
 @Service(Service.Level.PROJECT)
 public final class BranchTimeTrackerService {
 
     private static final Logger log = LoggerFactory.getLogger(BranchTimeTrackerService.class);
-    private final Project project;
+
     private String branch;
     private Instant startTime;
     private JiraClient jiraClient;
+    private PluginProperties pluginProperties;
+    private SessionStorage sessionStorage;
 
     public BranchTimeTrackerService(@NotNull Project project) {
-        this.project = project;
-        this.jiraClient = new JiraClient(project);
+        this.jiraClient = project.getService(JiraClient.class);
+        this.pluginProperties = project.getService(PluginProperties.class);
+        this.sessionStorage = project.getService(SessionStorage.class);
     }
 
     public SessionStorage getSessionStorage() {
-        return project.getService(SessionStorage.class);
+        return sessionStorage;
     }
 
-    public PluginProperties getSettings(){
-        return project.getService(PluginProperties.class);
+    public PluginProperties getPluginProperties() {
+        return pluginProperties;
     }
 
     public void startTimer(String currentBranch) {
-        System.out.println("BranchTimeTrackerService::startTimer");
-        branch = currentBranch;
-        startTime = Instant.now();
+        log.info("Starting timer for branch: {}", currentBranch);
+        this.branch = currentBranch;
+        this.startTime = Instant.now();
     }
 
     public void stopTimer() {
-        if (isFalse(branch == null || branch.isEmpty())) {
-            getSessionStorage().addSession(getSession());
+        if (isBranchValid()) {
+            sessionStorage.addSession(createSession());
         }
-        branch = null;
-        startTime = null;
+        resetTimer();
     }
 
-    public Session getSession() {
-        Session session = new Session()
+    private boolean isBranchValid() {
+        return branch != null && !branch.isEmpty();
+    }
+
+    private void resetTimer() {
+        this.branch = null;
+        this.startTime = null;
+    }
+
+    private Session createSession() {
+        return new Session()
                 .setId(UUID.randomUUID().toString())
                 .setBranch(branch)
                 .setStartTime(InstantFormatter.formatTime(startTime))
                 .setEndTime(InstantFormatter.formatTime(Instant.now()))
                 .setDate(InstantFormatter.formatDate(Instant.now()))
                 .setSentToJira(false);
-
-        return session;
     }
 
     public boolean sendSessionToJira(Session session) {
         try {
             String timeSpent = session.getDurationAsString();
-            String comment = "Sesja rozpoczęła się o " + session.getStartTime() +
-                    ", zakończyła o " + session.getEndTime() +
-                    ", czas trwania: " + timeSpent;
-
-
+            String comment = generateComment(session, timeSpent);
             return jiraClient.sendJiraUpdate(getIssueKey(session), timeSpent, comment);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to send session to Jira", e);
             return false;
         }
     }
 
+    private String generateComment(Session session, String timeSpent) {
+        return String.format("Session started at %s, ended at %s, duration: %s",
+                session.getStartTime(), session.getEndTime(), timeSpent);
+    }
+
     private String getIssueKey(Session session) {
-        return getSettings().getProjectKey() + "-" + session.getBranch().replaceAll("^[^0-9]*([0-9]+).*", "$1");
+        return pluginProperties.getProjectKey() + "-" + session.getBranch().replaceAll("^[^0-9]*([0-9]+).*", "$1");
+    }
+
+    public Session getSessionById(String sessionId) {
+        return getSessionStorage().getSessions().stream()
+                .filter(s -> s.getId().equals(sessionId))
+                .findFirst()
+                .orElse(null);
     }
 
     public void clearSessionHistory() {
-        getSessionStorage().clearSessions();
+        sessionStorage.clearSessions();
     }
 
     public String getCurrentBranch() {

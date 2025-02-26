@@ -10,10 +10,10 @@ import org.jetbrains.annotations.Nullable;
 )
 public class PluginProperties implements PersistentStateComponent<PluginProperties> {
 
-    public String jiraUrl;
-    public String apiToken;
-    public String username;
-    public String projectKey;
+    public String jiraUrl = "";
+    public String apiToken = "";
+    public String username = "";
+    public String projectKey = "";
 
     public String getJiraUrl() {
         return jiraUrl;
