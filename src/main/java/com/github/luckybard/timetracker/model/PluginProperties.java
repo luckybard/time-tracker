@@ -1,6 +1,8 @@
-package com.github.luckybard.timetracker.config;
+package com.github.luckybard.timetracker.model;
 
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,45 +12,41 @@ import org.jetbrains.annotations.Nullable;
 )
 public class PluginProperties implements PersistentStateComponent<PluginProperties> {
 
-    public String jiraUrl = "";
-    public String apiToken = "";
-    public String username = "";
-    public String projectKey = "";
+    public String jiraUrl;
+    public String apiToken;
+    public String username;
+    public String projectKey;
 
     public String getJiraUrl() {
         return jiraUrl;
     }
 
-    public PluginProperties setJiraUrl(String jiraUrl) {
+    public void setJiraUrl(String jiraUrl) {
         this.jiraUrl = jiraUrl;
-        return this;
     }
 
     public String getApiToken() {
         return apiToken;
     }
 
-    public PluginProperties setApiToken(String apiToken) {
+    public void setApiToken(String apiToken) {
         this.apiToken = apiToken;
-        return this;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public PluginProperties setUsername(String username) {
+    public void setUsername(String username) {
         this.username = username;
-        return this;
     }
 
     public String getProjectKey() {
         return projectKey;
     }
 
-    public PluginProperties setProjectKey(String projectKey) {
+    public void setProjectKey(String projectKey) {
         this.projectKey = projectKey;
-        return this;
     }
 
     @Override

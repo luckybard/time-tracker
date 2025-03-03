@@ -35,16 +35,4 @@ public class SessionStorage implements PersistentStateComponent<SessionStorage.S
     public void loadState(@NotNull State state) {
         this.state = state;
     }
-
-    public List<Session> getSessions() {
-        return state.sessions;
-    }
-
-    public void addSession(Session session) {
-        state.sessions.add(session);
-    }
-
-    public void clearSessions() {
-        state.sessions.clear();
-    }
 }

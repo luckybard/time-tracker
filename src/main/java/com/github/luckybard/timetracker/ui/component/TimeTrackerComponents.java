@@ -13,8 +13,6 @@ public class TimeTrackerComponents {
     private final JButton globalSettingsButton = new JButton("Ustawienia globalne");
     private final TimeTrackerTable sessionTable;
 
-
-
     public TimeTrackerComponents(Project project) {
         sessionTable = new TimeTrackerTable(project);
     }

@@ -1,7 +1,8 @@
 package com.github.luckybard.timetracker.ui.component;
 
-import com.github.luckybard.timetracker.config.PluginProperties;
+import com.github.luckybard.timetracker.model.PluginProperties;
 import com.github.luckybard.timetracker.service.BranchTimeTrackerService;
+import com.github.luckybard.timetracker.service.PluginPropertiesService;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,6 +12,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 public class TimeTrackerController {
+
     private final BranchTimeTrackerService trackerService;
     private final TimeTrackerComponents components;
     private final Timer uiUpdateTimer;
@@ -77,12 +79,13 @@ public class TimeTrackerController {
     }
 
     private void openGlobalSettings() {
-        PluginProperties settings = project.getService(PluginProperties.class);
+        PluginPropertiesService propertiesService = project.getService(PluginPropertiesService.class);
+        PluginProperties pluginProperties = propertiesService.getPluginProperties();
 
-        JTextField url = new JTextField(settings.getJiraUrl());
-        JTextField token = new JTextField(settings.getApiToken());
-        JTextField username = new JTextField(settings.getUsername());
-        JTextField projectKey = new JTextField(settings.getProjectKey());
+        JTextField url = new JTextField(pluginProperties.getJiraUrl());
+        JTextField token = new JTextField(pluginProperties.getApiToken());
+        JTextField username = new JTextField(pluginProperties.getUsername());
+        JTextField projectKey = new JTextField(pluginProperties.getProjectKey());
 
         JPanel panel = new JPanel(new GridLayout(4, 2));
         panel.add(new JLabel("Url:"));
@@ -99,10 +102,7 @@ public class TimeTrackerController {
                 "Edit Settings", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            settings.setUsername(username.getText());
-            settings.setApiToken(token.getText());
-            settings.setProjectKey(projectKey.getText());
-            settings.setJiraUrl(url.getText());
+            propertiesService.updateConfiguration(url.getText(), token.getText(), username.getText(), projectKey.getText());
         }
     }
 }

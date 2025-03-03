@@ -1,25 +1,23 @@
 package com.github.luckybard.timetracker.ui.component.buttons;
 
-import com.github.luckybard.timetracker.service.BranchTimeTrackerService;
+import com.github.luckybard.timetracker.service.SessionService;
 import com.intellij.ui.table.JBTable;
 
 import javax.swing.*;
-import javax.swing.DefaultCellEditor;
 import java.awt.*;
 
 public abstract class ColumnButtonEditor extends DefaultCellEditor {
     private final JButton button;
     private String label;
     private boolean isClicked;
-    private final BranchTimeTrackerService trackerService;
     public final Runnable reloadTable;
+    protected SessionService sessionService;
 
-    // Konstruktor
-    public ColumnButtonEditor(JCheckBox checkBox, String label, BranchTimeTrackerService trackerService, Runnable reloadTable) {
+    public ColumnButtonEditor(SessionService sessionService, JCheckBox checkBox, String label, Runnable reloadTable) {
         super(checkBox);
+        this.sessionService = sessionService;
         this.button = new JButton();
         this.button.setOpaque(true);
-        this.trackerService = trackerService;
         this.reloadTable = reloadTable;
         this.label = label;
         this.button.setText(label);
@@ -47,10 +45,6 @@ public abstract class ColumnButtonEditor extends DefaultCellEditor {
 
     public JBTable getTable() {
         return (JBTable) SwingUtilities.getAncestorOfClass(JBTable.class, this.button);
-    }
-
-    public BranchTimeTrackerService getTrackerService() {
-        return trackerService;
     }
 
     public Runnable getReloadTable() {

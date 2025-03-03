@@ -1,15 +1,20 @@
 package com.github.luckybard.timetracker.config;
 
+import com.github.luckybard.timetracker.model.PluginProperties;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Base64;
 
 @Service(Service.Level.PROJECT)
 public final class JiraClient {
+
+    private static final Logger logger = LoggerFactory.getLogger(JiraClient.class);
 
     public static final String WORKLOG_ENDPOINT = "/worklog";
     public static final String COMMENT_ENDPOINT = "/comment";
@@ -18,14 +23,15 @@ public final class JiraClient {
     private final Project project;
 
     public JiraClient(@NotNull Project project) {
-        this.project= project;
+        this.project = project;
     }
 
-    public PluginProperties getSettings(){
+    public PluginProperties getSettings() {
         return project.getService(PluginProperties.class);
     }
 
     public boolean sendJiraUpdate(String issueKey, String timeSpent, String comment) {
+        logger.info("JiraClient::sendJiraUpdate(), Sending Jira update to {}", issueKey);
         try {
             return updateIssueTime(issueKey, timeSpent) && addCommentToIssue(issueKey, comment);
         } catch (IOException e) {
@@ -60,7 +66,7 @@ public final class JiraClient {
                 .build();
     }
 
-    private boolean executeRequest(Request request) throws IOException {
+    private boolean executeRequest(Request request) {
         try (Response response = client.newCall(request).execute()) {
             return response.isSuccessful();
         } catch (IOException e) {

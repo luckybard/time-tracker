@@ -1,14 +1,13 @@
 package com.github.luckybard.timetracker.service;
 
 import com.github.luckybard.timetracker.config.JiraClient;
-import com.github.luckybard.timetracker.config.PluginProperties;
 import com.github.luckybard.timetracker.model.Session;
-import com.github.luckybard.timetracker.repository.SessionStorage;
 import com.github.luckybard.timetracker.util.InstantFormatter;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,39 +18,32 @@ import java.util.UUID;
 @Service(Service.Level.PROJECT)
 public final class BranchTimeTrackerService {
 
-    private static final Logger log = LoggerFactory.getLogger(BranchTimeTrackerService.class);
+    private static final Logger logger = LoggerFactory.getLogger(BranchTimeTrackerService.class);
 
     private String branch;
     private Instant startTime;
-    private JiraClient jiraClient;
-    private PluginProperties pluginProperties;
-    private SessionStorage sessionStorage;
-    private Project project;
+    private final JiraClient jiraClient;
+    private final SessionService sessionService;
+    private final PluginPropertiesService pluginPropertiesService;
+    private final Project project;
 
     public BranchTimeTrackerService(@NotNull Project project) {
         this.jiraClient = project.getService(JiraClient.class);
-        this.pluginProperties = project.getService(PluginProperties.class);
-        this.sessionStorage = project.getService(SessionStorage.class);
+        this.sessionService = project.getService(SessionService.class);
+        this.pluginPropertiesService = project.getService(PluginPropertiesService.class);
         this.project = project;
     }
 
-    public SessionStorage getSessionStorage() {
-        return sessionStorage;
-    }
-
-    public PluginProperties getPluginProperties() {
-        return pluginProperties;
-    }
-
     public void startTimer(String currentBranch) {
-        log.info("Starting timer for branch: {}", currentBranch);
+        logger.info("BranchTimeTrackerService::startTimer(), Starting timer for branch: {}", currentBranch);
         this.branch = currentBranch;
         this.startTime = Instant.now();
     }
 
     public void stopTimer() {
+        logger.info("BranchTimeTrackerService::stopTimer(), Stopping timer for branch: {}", getCurrentBranch());
         if (isBranchValid()) {
-            sessionStorage.addSession(createSession());
+            sessionService.addSession(createSession());
         }
         resetTimer();
     }
@@ -66,8 +58,10 @@ public final class BranchTimeTrackerService {
     }
 
     private Session createSession() {
+        String id = UUID.randomUUID().toString();
+        logger.info("BranchTimeTrackerService::createSession(), Creating session with id : {}", id);
         return new Session()
-                .setId(UUID.randomUUID().toString())
+                .setId(id)
                 .setBranch(branch)
                 .setStartTime(InstantFormatter.formatTime(startTime))
                 .setEndTime(InstantFormatter.formatTime(Instant.now()))
@@ -81,7 +75,7 @@ public final class BranchTimeTrackerService {
             String comment = generateComment(session, timeSpent);
             return jiraClient.sendJiraUpdate(getIssueKey(session), timeSpent, comment);
         } catch (Exception e) {
-            log.error("Failed to send session to Jira", e);
+            logger.error("Failed to send session to Jira", e);
             return false;
         }
     }
@@ -92,26 +86,24 @@ public final class BranchTimeTrackerService {
     }
 
     private String getIssueKey(Session session) {
-        return pluginProperties.getProjectKey() + "-" + session.getBranch().replaceAll("^[^0-9]*([0-9]+).*", "$1");
-    }
-
-    public Session getSessionById(String sessionId) {
-        return getSessionStorage().getSessions().stream()
-                .filter(s -> s.getId().equals(sessionId))
-                .findFirst()
-                .orElse(null);
+        return pluginPropertiesService.getPluginProperties().getProjectKey() + "-" +
+                session.getBranch().replaceAll("^[^0-9]*([0-9]+).*", "$1");
     }
 
     public void clearSessionHistory() {
-        sessionStorage.clearSessions();
+        logger.info("BranchTimeTrackerService::clearSessionHistory()");
+        sessionService.clearSessions();
     }
 
     public String getCurrentBranch() {
-        GitRepository gitRepository = GitRepositoryManager.getInstance(project).getRepositories().stream().findFirst().orElse(null);
-        if(gitRepository != null){
-           return gitRepository.getCurrentBranch().getName();
+        GitRepository gitRepository = GitRepositoryManager.getInstance(project).getRepositories().stream()
+                .findFirst()
+                .orElse(null);
+
+        if (gitRepository != null) {
+            return gitRepository.getCurrentBranch().getName();
         }
-        return "";
+        return StringUtils.EMPTY;
     }
 
     public Instant getStartTime() {
