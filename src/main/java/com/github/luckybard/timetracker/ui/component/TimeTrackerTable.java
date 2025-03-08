@@ -11,6 +11,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,6 +20,9 @@ import java.time.Duration;
 import java.util.List;
 
 public class TimeTrackerTable {
+
+    private static final Logger logger = LoggerFactory.getLogger(TimeTrackerTable.class);
+
     private final JBTable table;
     private final DefaultTableModel tableModel;
     private final SessionService sessionService;
@@ -44,6 +49,8 @@ public class TimeTrackerTable {
 
     public void clearTable() {
         tableModel.setRowCount(0);
+        tableModel.fireTableDataChanged();
+        table.clearSelection();
     }
 
     public JScrollPane getTableScrollPane() {
@@ -51,22 +58,33 @@ public class TimeTrackerTable {
     }
 
     public void updateTable() {
-        clearTable();
-        List<Session> sessions = sessionService.getSessions();
-        for (Session session : sessions) {
-            tableModel.addRow(new Object[]{
-                    session.getId(),
-                    session.getBranch(),
-                    session.getDate(),
-                    session.getStartTime(),
-                    session.getEndTime(),
-                    formatDuration(session.getDuration()),
-                    session.isSentToJira() ? "Sent to Jira" : "Send to Jira",
-                    "Edit",
-                    "Delete"
-            });
-        }
-        initializeButtons();
+        int selectedRowBeforeUpdate = table.getSelectedRow();
+
+        SwingUtilities.invokeLater(() -> {
+            clearTable();
+            List<Session> sessions = sessionService.getSessions();
+            for (Session session : sessions) {
+                tableModel.addRow(new Object[]{
+                        session.getId(),
+                        session.getBranch(),
+                        session.getDate(),
+                        session.getStartTime(),
+                        session.getEndTime(),
+                        formatDuration(session.getDuration()),
+                        session.isSentToJira() ? "Sent to Jira" : "Send to Jira",
+                        "Edit",
+                        "Delete"
+                });
+            }
+
+            initializeButtons();
+
+            if (selectedRowBeforeUpdate >= 0 && selectedRowBeforeUpdate < tableModel.getRowCount()) {
+                table.setRowSelectionInterval(selectedRowBeforeUpdate, selectedRowBeforeUpdate);
+            } else {
+                table.clearSelection();
+            }
+        });
     }
 
     private void initializeButtons() {
