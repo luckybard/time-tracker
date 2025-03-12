@@ -11,6 +11,7 @@ public class TimeTrackerComponents {
     private final JButton startTrackingButton = new JButton("Start");
     private final JButton clearHistoryButton = new JButton("Wyczyść historię");
     private final JButton globalSettingsButton = new JButton("Ustawienia globalne");
+    private final JButton exportExcelButton = new JButton("Export to Excel");
     private final TimeTrackerTable sessionTable;
 
     public TimeTrackerComponents(Project project) {
@@ -39,6 +40,10 @@ public class TimeTrackerComponents {
 
     public JButton getGlobalSettingsButton() {
         return globalSettingsButton;
+    }
+
+    public JButton getExportExcelButton() {
+        return exportExcelButton;
     }
 
     public TimeTrackerTable getSessionTable() {

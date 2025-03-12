@@ -51,6 +51,8 @@ dependencies {
         plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
 
         implementation("com.squareup.okhttp3:okhttp:4.9.3")
+        implementation("org.apache.poi:poi:5.2.3")
+        implementation("org.apache.poi:poi-ooxml:5.2.3")
 
         instrumentationTools()
         pluginVerifier()

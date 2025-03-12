@@ -2,34 +2,52 @@ package com.github.luckybard.timetracker.ui.component;
 
 import com.github.luckybard.timetracker.model.PluginProperties;
 import com.github.luckybard.timetracker.service.BranchTimeTrackerService;
+import com.github.luckybard.timetracker.service.ExcelExporterService;
 import com.github.luckybard.timetracker.service.PluginPropertiesService;
+import com.github.luckybard.timetracker.service.SessionService;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 
 public class TimeTrackerController {
 
+    private final ExcelExporterService excelExporterService;
     private final BranchTimeTrackerService trackerService;
+    private final SessionService sessionService;
     private final TimeTrackerComponents components;
     private final Timer uiUpdateTimer;
     private final Project project;
 
-    public TimeTrackerController(@NotNull Project project, BranchTimeTrackerService trackerService, TimeTrackerComponents components) {
+    public TimeTrackerController(ExcelExporterService excelExporterService, @NotNull Project project, BranchTimeTrackerService trackerService, SessionService sessionService, TimeTrackerComponents components) {
+        this.excelExporterService = excelExporterService;
         this.trackerService = trackerService;
+        this.sessionService = sessionService;
         this.components = components;
         this.project = project;
 
+        initializeButtons(components);
+
+        uiUpdateTimer = new Timer(1000, e -> updateUI());
+        uiUpdateTimer.start();
+    }
+
+    private void initializeButtons(TimeTrackerComponents components) {
         components.getStopTrackingButton().addActionListener(e -> stopTracking());
         components.getStartTrackingButton().addActionListener(e -> startTracking());
         components.getClearHistoryButton().addActionListener(e -> clearHistory());
         components.getGlobalSettingsButton().addActionListener(e -> openGlobalSettings());
-
-        uiUpdateTimer = new Timer(1000, e -> updateUI());
-        uiUpdateTimer.start();
+        components.getExportExcelButton().addActionListener(e -> {
+            try {
+                exportToExcel();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
     private void updateUI() {
@@ -104,5 +122,9 @@ public class TimeTrackerController {
         if (result == JOptionPane.OK_OPTION) {
             propertiesService.updateConfiguration(url.getText(), token.getText(), username.getText(), projectKey.getText());
         }
+    }
+
+    private void exportToExcel() throws IOException {
+        excelExporterService.promptUserAndExport(sessionService.getSessions());
     }
 }
