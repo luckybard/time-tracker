@@ -31,10 +31,10 @@ public class TimeTrackerPanel {
         JPanel settingsButtons = new JPanel(new GridLayout(1, 4));
         settingsButtons.add(components.getClearHistoryButton());
         settingsButtons.add(components.getGlobalSettingsButton());
-        settingsButtons.add(components.getExportExcelButton());
+        settingsButtons.add(components.getExportButton());
 
         JPanel topPanel = new JPanel(new GridLayout(5, 1));
-        topPanel.add(components.getBranchLabel());
+        topPanel.add(components.getNameLabel());
         topPanel.add(components.getElapsedTimeLabel());
         topPanel.add(trackingButtons, BorderLayout.AFTER_LAST_LINE);
         topPanel.add(settingsButtons, BorderLayout.AFTER_LAST_LINE);

@@ -26,7 +26,7 @@ public class EditSessionButton extends ColumnButtonEditor {
             JTextField endTimeField = new JTextField(session.getEndTime());
 
             JPanel panel = new JPanel(new GridLayout(4, 2));
-            panel.add(new JLabel("Branch:"));
+            panel.add(new JLabel("Session:"));
             panel.add(branchField);
             panel.add(new JLabel("Date (yyyy-MM-dd):"));
             panel.add(dateField);

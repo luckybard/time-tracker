@@ -11,7 +11,7 @@ public class SendToJiraButton extends ColumnButtonEditor {
     private final BranchTimeTrackerService branchTimeTrackerService;
 
     public SendToJiraButton(SessionService sessionService, Runnable reloadTable, BranchTimeTrackerService branchTimeTrackerService) {
-        super(sessionService, new JCheckBox(), "Send to Jira", reloadTable);
+        super(sessionService, new JCheckBox(), "Send", reloadTable);
         this.branchTimeTrackerService = branchTimeTrackerService;
     }
 
@@ -25,7 +25,7 @@ public class SendToJiraButton extends ColumnButtonEditor {
                 session.setSentToJira(true);
                 getReloadTable().run();
             } else {
-                JOptionPane.showMessageDialog(null, "Błąd podczas wysyłania do JIRA.");
+                JOptionPane.showMessageDialog(null, "Error while sending request to Jira:");
             }
         }
     }

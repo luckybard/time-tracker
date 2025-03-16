@@ -11,7 +11,7 @@ public class ButtonRenderer extends JButton implements javax.swing.table.TableCe
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         setText((value == null) ? "" : value.toString());
-        if (value != null && value.equals("Sent to Jira")) {
+        if (value != null && value.equals("Sent")) {
             setEnabled(false);
         } else {
             setEnabled(true);

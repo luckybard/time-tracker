@@ -33,7 +33,7 @@ public final class SessionService {
     }
 
     public void addSession(Session session) {
-        logger.info("Adding session: {}", session);
+        logger.info("SessionService:addSession(), {}", session);
         state.sessions.add(session);
     }
 

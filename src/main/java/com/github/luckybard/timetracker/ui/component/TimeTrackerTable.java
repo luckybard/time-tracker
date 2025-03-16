@@ -10,6 +10,7 @@ import com.github.luckybard.timetracker.ui.component.buttons.SendToJiraButton;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +40,8 @@ public class TimeTrackerTable {
                 "End Time",
                 "Duration",
                 "Send to Jira",
-                "Edit",
-                "Delete"
+                "Edit Session",
+                "Delete Session"
         }, 0);
         this.table = new JBTable(tableModel);
 
@@ -71,7 +72,7 @@ public class TimeTrackerTable {
                         session.getStartTime(),
                         session.getEndTime(),
                         formatDuration(session.getDuration()),
-                        session.isSentToJira() ? "Sent to Jira" : "Send to Jira",
+                        session.isSentToJira() ? "Sent" : "Send",
                         "Edit",
                         "Delete"
                 });
@@ -91,11 +92,11 @@ public class TimeTrackerTable {
         table.getColumn("Send to Jira").setCellRenderer(new ButtonRenderer());
         table.getColumn("Send to Jira").setCellEditor(new SendToJiraButton(sessionService, this::updateTable, branchTimeTrackerService));
 
-        table.getColumn("Edit").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Edit").setCellEditor(new EditSessionButton(sessionService, this::updateTable));
+        table.getColumn("Edit Session").setCellRenderer(new ButtonRenderer());
+        table.getColumn("Edit Session").setCellEditor(new EditSessionButton(sessionService, this::updateTable));
 
-        table.getColumn("Delete").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Delete").setCellEditor(new DeleteSessionButton(sessionService, this::updateTable, tableModel));
+        table.getColumn("Delete Session").setCellRenderer(new ButtonRenderer());
+        table.getColumn("Delete Session").setCellEditor(new DeleteSessionButton(sessionService, this::updateTable, tableModel));
     }
 
     private String formatDuration(Duration duration) {

@@ -12,7 +12,7 @@ public abstract class ColumnButtonEditor extends DefaultCellEditor {
     private boolean isClicked;
     public final Runnable reloadTable;
     protected SessionService sessionService;
-
+ 
     public ColumnButtonEditor(SessionService sessionService, JCheckBox checkBox, String label, Runnable reloadTable) {
         super(checkBox);
         this.sessionService = sessionService;

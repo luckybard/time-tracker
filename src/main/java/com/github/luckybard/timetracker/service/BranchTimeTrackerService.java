@@ -35,13 +35,13 @@ public final class BranchTimeTrackerService {
     }
 
     public void startTimer(String currentBranch) {
-        logger.info("BranchTimeTrackerService::startTimer(), Starting timer for branch: {}", currentBranch);
+        logger.info("BranchTimeTrackerService::startTimer(), starting timer for branch: {}", currentBranch);
         this.branch = currentBranch;
         this.startTime = Instant.now();
     }
 
     public void stopTimer() {
-        logger.info("BranchTimeTrackerService::stopTimer(), Stopping timer for branch: {}", getCurrentBranch());
+        logger.info("BranchTimeTrackerService::stopTimer(), stopping timer for branch: {}", getCurrentBranch());
         if (isBranchValid()) {
             sessionService.addSession(createSession());
         }
@@ -59,7 +59,7 @@ public final class BranchTimeTrackerService {
 
     private Session createSession() {
         String id = UUID.randomUUID().toString();
-        logger.info("BranchTimeTrackerService::createSession(), Creating session with id : {}", id);
+        logger.info("BranchTimeTrackerService::createSession(), creating session with id : {}", id);
         return new Session()
                 .setId(id)
                 .setBranch(branch)

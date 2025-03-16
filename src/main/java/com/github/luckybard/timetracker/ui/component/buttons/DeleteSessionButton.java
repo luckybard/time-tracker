@@ -22,7 +22,7 @@ public class DeleteSessionButton extends ColumnButtonEditor {
         Session session = sessionService.getSessionById(sessionId);
 
         if (session != null) {
-            if (confirmAction("Czy na pewno chcesz usunąć?", "Usuwanie")) {
+            if (confirmAction("Are you sure about deleting this session?", "Delete")) {
                 sessionService.getSessions().remove(session);
             }
         }

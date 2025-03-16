@@ -6,6 +6,7 @@ import com.github.luckybard.timetracker.service.ExcelExporterService;
 import com.github.luckybard.timetracker.service.PluginPropertiesService;
 import com.github.luckybard.timetracker.service.SessionService;
 import com.intellij.openapi.project.Project;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -41,7 +42,7 @@ public class TimeTrackerController {
         components.getStartTrackingButton().addActionListener(e -> startTracking());
         components.getClearHistoryButton().addActionListener(e -> clearHistory());
         components.getGlobalSettingsButton().addActionListener(e -> openGlobalSettings());
-        components.getExportExcelButton().addActionListener(e -> {
+        components.getExportButton().addActionListener(e -> {
             try {
                 exportToExcel();
             } catch (IOException ex) {
@@ -52,17 +53,17 @@ public class TimeTrackerController {
 
     private void updateUI() {
         String currentBranch = trackerService.getCurrentBranch();
-        components.getBranchLabel().setText("Aktualnie śledzony branch: " + (currentBranch != null ? currentBranch : "Brak"));
+        components.getNameLabel().setText("Current session: " + (currentBranch != null ? currentBranch : StringUtils.EMPTY));
 
         Instant startTime = trackerService.getStartTime();
         if (startTime != null) {
             components.getStartTrackingButton().setEnabled(false);
             components.getStopTrackingButton().setEnabled(true);
             Duration elapsed = Duration.between(startTime, Instant.now());
-            components.getElapsedTimeLabel().setText(String.format("Czas: %02d:%02d:%02d",
+            components.getElapsedTimeLabel().setText(String.format("Time: %02d:%02d:%02d",
                     elapsed.toHours(), elapsed.toMinutesPart(), elapsed.toSecondsPart()));
         } else {
-            components.getElapsedTimeLabel().setText("Czas: 00:00:00");
+            components.getElapsedTimeLabel().setText("Time: 00:00:00");
         }
 
         updateSessionTable();
@@ -84,14 +85,14 @@ public class TimeTrackerController {
         components.getStartTrackingButton().setEnabled(true);
         components.getStopTrackingButton().setEnabled(false);
         updateSessionTable();
-        JOptionPane.showMessageDialog(null, "Sesja zakończona");
+        JOptionPane.showMessageDialog(null, "Session has been stopped.");
     }
 
     private void clearHistory() {
-        int confirm = JOptionPane.showConfirmDialog(null, "Czy jesteś pewien?", "Wyczyść historię", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(null, "Are you sure about clearing whole history?", "Clear session history", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             trackerService.clearSessionHistory();
-            JOptionPane.showMessageDialog(null, "Historia została wyczyszczona!");
+            JOptionPane.showMessageDialog(null, "History has been cleared.");
             components.getSessionTable().clearTable();
         }
     }
