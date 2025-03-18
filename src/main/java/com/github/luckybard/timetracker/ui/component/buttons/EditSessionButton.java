@@ -19,7 +19,7 @@ public class EditSessionButton extends ColumnButtonEditor {
     public void handleButtonClick(int row) {
         String sessionId = (String) getTable().getValueAt(row, 0);
         Session session = sessionService.getSessionById(sessionId);
-        if (session != null) {
+        if (session != null && !session.isSentToJira()) {
             JTextField branchField = new JTextField(session.getBranch());
             JTextField dateField = new JTextField(session.getDate());
             JTextField startTimeField = new JTextField(session.getStartTime());
@@ -68,7 +68,7 @@ public class EditSessionButton extends ColumnButtonEditor {
                     this.handleButtonClick(row);
                 }
 
-                if(shouldSave){
+                if (shouldSave) {
                     session.setBranch(branch);
                     session.setDate(date);
                     session.setStartTime(startTime);

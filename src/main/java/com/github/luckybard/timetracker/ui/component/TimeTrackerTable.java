@@ -20,6 +20,8 @@ import javax.swing.table.DefaultTableModel;
 import java.time.Duration;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 public class TimeTrackerTable {
 
     private static final Logger logger = LoggerFactory.getLogger(TimeTrackerTable.class);
@@ -73,7 +75,7 @@ public class TimeTrackerTable {
                         session.getEndTime(),
                         formatDuration(session.getDuration()),
                         session.isSentToJira() ? "Sent" : "Send",
-                        "Edit",
+                        session.isSentToJira() ? "Already sent" : "Edit",
                         "Delete"
                 });
             }
