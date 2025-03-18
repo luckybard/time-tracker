@@ -50,7 +50,7 @@ dependencies {
         // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
         plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
 
-        implementation("com.squareup.okhttp3:okhttp:4.9.3")
+        implementation("com.squareup.okhttp3:okhttp:4.12.0")
         implementation("org.apache.poi:poi:5.2.3")
         implementation("org.apache.poi:poi-ooxml:5.2.3")
 
