@@ -1,13 +1,16 @@
 package com.github.luckybard.timetracker.model;
 
 import java.io.Serializable;
-import java.time.*;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class Session implements Serializable {
 
     private String id;
     private String branch;
+    private String name;
+    private String description;
     /*** YYYY-MM-DD ***/
     private String date;
     /*** HH:mm:ss ***/
@@ -31,6 +34,24 @@ public class Session implements Serializable {
 
     public Session setBranch(String branch) {
         this.branch = branch;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Session setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Session setDescription(String description) {
+        this.description = description;
         return this;
     }
 
@@ -77,13 +98,5 @@ public class Session implements Serializable {
         LocalTime end = LocalTime.parse(endTime, timeFormatter);
 
         return Duration.between(start, end);
-    }
-
-    public String getDurationAsString() {
-        Duration duration = getDuration();
-        long hours = duration.toHours();
-        long minutes = duration.minusHours(hours).toMinutes();
-
-        return 0 == hours ? minutes + "m" : hours + "h " + minutes + "m";
     }
 }

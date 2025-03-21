@@ -15,33 +15,67 @@ import org.slf4j.LoggerFactory;
 import java.time.Instant;
 import java.util.UUID;
 
-@Service(Service.Level.PROJECT)
-public final class BranchTimeTrackerService {
+import static com.github.luckybard.timetracker.util.TimeUtils.getDurationAsString;
+import static org.apache.commons.lang3.BooleanUtils.isFalse;
+import static org.apache.commons.lang3.StringUtils.SPACE;
 
-    private static final Logger logger = LoggerFactory.getLogger(BranchTimeTrackerService.class);
+@Service(Service.Level.PROJECT)
+public final class TimeTrackerService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TimeTrackerService.class);
 
     private String branch;
+    private String name;
+    private String description;
     private Instant startTime;
     private final JiraClient jiraClient;
     private final SessionService sessionService;
     private final PluginPropertiesService pluginPropertiesService;
     private final Project project;
 
-    public BranchTimeTrackerService(@NotNull Project project) {
+    public TimeTrackerService(@NotNull Project project) {
         this.jiraClient = project.getService(JiraClient.class);
         this.sessionService = project.getService(SessionService.class);
         this.pluginPropertiesService = project.getService(PluginPropertiesService.class);
         this.project = project;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public TimeTrackerService setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public TimeTrackerService setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public String getBranch() {
+        return branch;
+    }
+
+    public TimeTrackerService setBranch(String branch) {
+        this.branch = branch;
+        return this;
+    }
+
     public void startTimer(String currentBranch) {
-        logger.info("BranchTimeTrackerService::startTimer(), starting timer for branch: {}", currentBranch);
+        logger.info("TimeTrackerService::startTimer(), starting timer for branch: {}", currentBranch);
         this.branch = currentBranch;
+        this.name = currentBranch;
         this.startTime = Instant.now();
     }
 
     public void stopTimer() {
-        logger.info("BranchTimeTrackerService::stopTimer(), stopping timer for branch: {}", getCurrentBranch());
+        logger.info("TimeTrackerService::stopTimer(), stopping timer for branch: {}", fetchCurrentBranch());
         if (isBranchValid()) {
             sessionService.addSession(createSession());
         }
@@ -53,16 +87,18 @@ public final class BranchTimeTrackerService {
     }
 
     private void resetTimer() {
+        this.name = null;
         this.branch = null;
         this.startTime = null;
     }
 
     private Session createSession() {
         String id = UUID.randomUUID().toString();
-        logger.info("BranchTimeTrackerService::createSession(), creating session with id : {}", id);
+        logger.info("TimeTrackerService::createSession(), creating session with id : {}", id);
         return new Session()
                 .setId(id)
                 .setBranch(branch)
+                .setName(name)
                 .setStartTime(InstantFormatter.formatTime(startTime))
                 .setEndTime(InstantFormatter.formatTime(Instant.now()))
                 .setDate(InstantFormatter.formatDate(Instant.now()))
@@ -71,7 +107,7 @@ public final class BranchTimeTrackerService {
 
     public boolean sendSessionToJira(Session session) {
         try {
-            String timeSpent = session.getDurationAsString();
+            String timeSpent = getDurationAsString(session.getDuration());
             String comment = generateComment(session, timeSpent);
             return jiraClient.sendJiraUpdate(getIssueKey(session), timeSpent, comment);
         } catch (Exception e) {
@@ -81,8 +117,17 @@ public final class BranchTimeTrackerService {
     }
 
     private String generateComment(Session session, String timeSpent) {
-        return String.format("Session started at %s, ended at %s, duration: %s",
+        String comment = String.format("Session started at %s, ended at %s, duration: %s",
                 session.getStartTime(), session.getEndTime(), timeSpent);
+
+        if (StringUtils.isNotBlank(session.getName()) && isFalse(session.getName().equals(session.getBranch()))) {
+            comment = comment + SPACE + String.format("named: %s ", session.getName());
+        }
+        if (StringUtils.isNotBlank(session.getDescription())) {
+            comment = comment + SPACE + String.format("with description: %s ", session.getDescription());
+        }
+
+        return comment;
     }
 
     private String getIssueKey(Session session) {
@@ -91,11 +136,11 @@ public final class BranchTimeTrackerService {
     }
 
     public void clearSessionHistory() {
-        logger.info("BranchTimeTrackerService::clearSessionHistory()");
+        logger.info("TimeTrackerService::clearSessionHistory()");
         sessionService.clearSessions();
     }
 
-    public String getCurrentBranch() {
+    public String fetchCurrentBranch() {
         GitRepository gitRepository = GitRepositoryManager.getInstance(project).getRepositories().stream()
                 .findFirst()
                 .orElse(null);

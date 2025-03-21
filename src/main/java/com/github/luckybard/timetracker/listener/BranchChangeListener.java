@@ -1,6 +1,6 @@
 package com.github.luckybard.timetracker.listener;
 
-import com.github.luckybard.timetracker.service.BranchTimeTrackerService;
+import com.github.luckybard.timetracker.service.TimeTrackerService;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import git4idea.repo.GitRepository;
@@ -15,10 +15,10 @@ public class BranchChangeListener implements GitRepositoryChangeListener {
 
     private static final Logger logger = LoggerFactory.getLogger(BranchChangeListener.class);
 
-    private final BranchTimeTrackerService trackerService;
+    private final TimeTrackerService trackerService;
     private String currentBranch;
 
-    public BranchChangeListener(BranchTimeTrackerService trackerService) {
+    public BranchChangeListener(TimeTrackerService trackerService) {
         this.trackerService = trackerService;
     }
 
@@ -40,7 +40,7 @@ public class BranchChangeListener implements GitRepositoryChangeListener {
 
     public static void register(@NotNull Project project) {
         logger.debug("BranchChangeListener::register()");
-        BranchTimeTrackerService trackerService = project.getService(BranchTimeTrackerService.class);
+        TimeTrackerService trackerService = project.getService(TimeTrackerService.class);
         MessageBusConnection connection = project.getMessageBus().connect();
         connection.subscribe(GitRepository.GIT_REPO_CHANGE, new BranchChangeListener(trackerService));
     }

@@ -2,7 +2,9 @@ package com.github.luckybard.timetracker.service;
 
 import com.github.luckybard.timetracker.model.Session;
 import com.intellij.openapi.components.Service;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.luckybard.timetracker.util.TimeUtils.getDurationAsString;
+
 @Service(Service.Level.PROJECT)
 public final class ExcelExporterService {
     private static final Logger logger = LoggerFactory.getLogger(ExcelExporterService.class);
@@ -28,10 +32,12 @@ public final class ExcelExporterService {
         Row headerRow = sheet.createRow(0);
         headerRow.createCell(0).setCellValue("ID");
         headerRow.createCell(1).setCellValue("Branch");
-        headerRow.createCell(2).setCellValue("Date");
-        headerRow.createCell(3).setCellValue("Start Time");
-        headerRow.createCell(4).setCellValue("End Time");
-        headerRow.createCell(5).setCellValue("Duration (hours)");
+        headerRow.createCell(2).setCellValue("Name");
+        headerRow.createCell(3).setCellValue("Description");
+        headerRow.createCell(4).setCellValue("Date");
+        headerRow.createCell(5).setCellValue("Start Time");
+        headerRow.createCell(6).setCellValue("End Time");
+        headerRow.createCell(7).setCellValue("Duration");
 
         Map<LocalDate, Map<String, Duration>> dailyBranchTime = new HashMap<>();
         Map<LocalDate, Duration> dailyTotalTime = new HashMap<>();
@@ -42,10 +48,12 @@ public final class ExcelExporterService {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(session.getId());
             row.createCell(1).setCellValue(session.getBranch());
-            row.createCell(2).setCellValue(session.getDate());
-            row.createCell(3).setCellValue(session.getStartTime());
-            row.createCell(4).setCellValue(session.getEndTime());
-            row.createCell(5).setCellValue(session.getDuration().toHours());
+            row.createCell(2).setCellValue(session.getName());
+            row.createCell(3).setCellValue(session.getDescription());
+            row.createCell(4).setCellValue(session.getDate());
+            row.createCell(5).setCellValue(session.getStartTime());
+            row.createCell(6).setCellValue(session.getEndTime());
+            row.createCell(7).setCellValue(getDurationAsString(session.getDuration()));
 
             LocalDate sessionDate = LocalDate.parse(session.getDate());
             dailyBranchTime
@@ -70,7 +78,7 @@ public final class ExcelExporterService {
         Row headerRow = sheet.createRow(rowNum++);
         headerRow.createCell(0).setCellValue("Daily Summary");
         headerRow.createCell(1).setCellValue("Branch");
-        headerRow.createCell(2).setCellValue("Time Spent (hours)");
+        headerRow.createCell(2).setCellValue("Time Spent");
         headerRow.createCell(3).setCellValue("Percentage of Day");
 
         for (Map.Entry<LocalDate, Map<String, Duration>> entry : dailyBranchTime.entrySet()) {
@@ -86,7 +94,7 @@ public final class ExcelExporterService {
                 Row row = sheet.createRow(rowNum++);
                 row.createCell(0).setCellValue(date.toString());
                 row.createCell(1).setCellValue(branch);
-                row.createCell(2).setCellValue(timeSpent.toHours());
+                row.createCell(2).setCellValue(getDurationAsString(timeSpent));
                 row.createCell(3).setCellValue(String.format("%.2f", percentage));
             }
         }
@@ -95,7 +103,7 @@ public final class ExcelExporterService {
         Row weeklySummaryHeader = sheet.createRow(rowNum++);
         weeklySummaryHeader.createCell(0).setCellValue("Weekly Summary");
         weeklySummaryHeader.createCell(1).setCellValue("Branch");
-        weeklySummaryHeader.createCell(2).setCellValue("Total Time Spent (hours)");
+        weeklySummaryHeader.createCell(2).setCellValue("Total Time Spent");
 
         for (Map.Entry<String, Duration> branchEntry : weeklyBranchTime.entrySet()) {
             String branch = branchEntry.getKey();
@@ -103,7 +111,7 @@ public final class ExcelExporterService {
 
             Row row = sheet.createRow(rowNum++);
             row.createCell(1).setCellValue(branch);
-            row.createCell(2).setCellValue(timeSpent.toHours());
+            row.createCell(2).setCellValue(getDurationAsString(timeSpent));
         }
     }
 
