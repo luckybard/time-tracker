@@ -5,6 +5,11 @@ A time tracking plugin that automatically records the time spent on different br
 It also allows sending updates to JIRA and generating reports in Excel format. 
 This tool helps you manage your time more efficiently and automate the process of reporting progress.
 
+<!-- Plugin description -->
+This Plugin is designed to help you track your working time efficiently. It automatically monitors your work on branches,
+integrates with JIRA for seamless task updates, and generates Excel reports for better time management.
+<!-- Plugin description end -->
+
 ---
 
 ## Features
