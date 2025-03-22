@@ -1,51 +1,65 @@
-# time-tracker
+# README: Time Tracking Plugin
+## Project Description
 
-![Build](https://github.com/luckybard/time-tracker/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
-
-## Template ToDo list
-- [x] Create a new [IntelliJ Platform Plugin Template][template] project.
-- [ ] Get familiar with the [template documentation][template].
-- [ ] Adjust the [pluginGroup](./gradle.properties) and [pluginName](./gradle.properties), as well as the [id](./src/main/resources/META-INF/plugin.xml) and [sources package](./src/main/kotlin).
-- [ ] Adjust the plugin description in `README` (see [Tips][docs:plugin-description])
-- [ ] Review the [Legal Agreements](https://plugins.jetbrains.com/docs/marketplace/legal-agreements.html?from=IJPluginTemplate).
-- [ ] [Publish a plugin manually](https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate) for the first time.
-- [ ] Set the `MARKETPLACE_ID` in the above README badges. You can obtain it once the plugin is published to JetBrains Marketplace.
-- [ ] Set the [Plugin Signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html?from=IJPluginTemplate) related [secrets](https://github.com/JetBrains/intellij-platform-plugin-template#environment-variables).
-- [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html?from=IJPluginTemplate).
-- [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
-
-<!-- Plugin description -->
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
-
-This specific section is a source for the [plugin.xml](/src/main/resources/META-INF/plugin.xml) file which will be extracted by the [Gradle](/build.gradle.kts) during the build process.
-
-To keep everything working, do not remove `<!-- ... -->` sections. 
-<!-- Plugin description end -->
-
-## Installation
-
-- Using the IDE built-in plugin system:
-  
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "time-tracker"</kbd> >
-  <kbd>Install</kbd>
-  
-- Using JetBrains Marketplace:
-
-  Go to [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID) and install it by clicking the <kbd>Install to ...</kbd> button in case your IDE is running.
-
-  You can also download the [latest release](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID/versions) from JetBrains Marketplace and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
-
-- Manually:
-
-  Download the [latest release](https://github.com/luckybard/time-tracker/releases/latest) and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
-
+A time tracking plugin that automatically records the time spent on different branches in a project. 
+It also allows sending updates to JIRA and generating reports in Excel format. 
+This tool helps you manage your time more efficiently and automate the process of reporting progress.
 
 ---
-Plugin based on the [IntelliJ Platform Plugin Template][template].
 
-[template]: https://github.com/JetBrains/intellij-platform-plugin-template
-[docs:plugin-description]: https://plugins.jetbrains.com/docs/intellij/plugin-user-experience.html#plugin-description-and-presentation
+## Features
+
+- **Automatic Time Tracking**:
+  - The plugin automatically detects the branch you are working on and starts tracking time.
+  - When switching branches, it stops the current timer and starts a new one for the new branch.
+
+- **Session Management**:
+  - Ability to manually pause and resume time tracking.
+  - Edit sessions during or after completion:
+    - Change branch name.
+    - Change session name.
+    - Add description.
+    - Correct start and end times.
+    - Delete session.
+
+- **Local Data Storage**:
+  - All session information is automatically saved in an XML file.
+
+- **JIRA Integration**:
+  - Ability to send session information as a comment to a JIRA task and update log time.
+  - Automatically extracts the task number from the branch name (the task number must be included in the branch name).
+
+- **Excel Reports**:
+  - Generate reports and statistics of worked time in Excel format.
+
+---
+
+## Requirements
+
+To use the JIRA integration feature, you need to configure the following settings in the plugin:
+
+- **Email**: The email address associated with your JIRA account.
+- **Project Key**: The key of the project to which you want to send data.
+- **API Token**: An API token generated in JIRA.
+- **Project URL**: The URL of the project in JIRA (e.g., `https://your-domain.atlassian.net`).
+
+---
+
+## Important Notes
+
+1. **Branch Name Must Contain the JIRA Task Number**:
+  - The plugin automatically attempts to extract the task number (e.g., `TASK-123`) from the branch name. 
+  - Ensure that the branch name contains the correct task number for the JIRA data sending feature to work properly.
+
+2. **Local Data Storage**:
+  - All session data is stored locally in an XML file. This allows editing data even after completing work.
+
+---
+
+## How to Use
+
+1. Start working on a branch – the plugin will automatically detect the branch and start tracking time.
+2. At any time, you can edit session, pause or resume time tracking.
+3. After completing work, edit or delete session data if necessary.
+4. Send data to JIRA using the plugin's feature.
+5. Generate an Excel report to summarize your work time.
