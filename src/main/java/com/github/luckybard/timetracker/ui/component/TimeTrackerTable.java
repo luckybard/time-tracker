@@ -20,7 +20,7 @@ import java.time.Duration;
 import java.util.List;
 
 public class TimeTrackerTable {
-
+    String testForJira= "TEST JIRA INTEGRATIOn";
     private static final Logger logger = LoggerFactory.getLogger(TimeTrackerTable.class);
 
     private final JBTable table;
