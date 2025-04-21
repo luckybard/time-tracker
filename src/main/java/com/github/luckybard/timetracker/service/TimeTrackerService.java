@@ -27,7 +27,7 @@ public final class TimeTrackerService {
     private String branch;
     private String name;
     private String description;
-    private Instant startTime;
+    private Instant startTdfrgdfbdfbdfbdbfdfbdfbdfbime;
     private final JiraClient jiraClient;
     private final SessionService sessionService;
     private final PluginPropertiesService pluginPropertiesService;
