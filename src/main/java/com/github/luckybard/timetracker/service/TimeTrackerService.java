@@ -67,7 +67,8 @@ public final class TimeTrackerService {
         return this;
     }
 
-    public void startTimer(String currentBranch) {
+    public void startTimer() {
+        String currentBranch = fetchCurrentBranch();
         logger.info("TimeTrackerService::startTimer(), starting timer for branch: {}", currentBranch);
         this.branch = currentBranch;
         this.name = currentBranch;
@@ -153,5 +154,9 @@ public final class TimeTrackerService {
 
     public Instant getStartTime() {
         return startTime;
+    }
+
+    public boolean isTracking() {
+        return startTime != null;
     }
 }

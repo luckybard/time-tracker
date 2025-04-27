@@ -34,7 +34,7 @@ public class BranchChangeListener implements GitRepositoryChangeListener {
         if (!newBranch.equals(currentBranch)) {
             trackerService.stopTimer();
             currentBranch = newBranch;
-            trackerService.startTimer(currentBranch);
+            trackerService.startTimer();
         }
     }
 
