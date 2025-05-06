@@ -1,10 +1,10 @@
 package com.github.luckybard.timetracker.service;
 
-import com.github.luckybard.timetracker.config.JiraClient;
 import com.github.luckybard.timetracker.model.Session;
 import com.github.luckybard.timetracker.util.InstantFormatter;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
+import com.intellij.ui.components.JBScrollPane;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+import java.awt.*;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -20,51 +22,58 @@ import static org.apache.commons.lang3.BooleanUtils.isFalse;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
 @Service(Service.Level.PROJECT)
-public final class TimeTrackerService {
+public final class TrackerService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TimeTrackerService.class);
+    private static final Logger logger = LoggerFactory.getLogger(TrackerService.class);
 
     private String branch;
     private String name;
     private String description;
     private Instant startTime;
-    private final JiraClient jiraClient;
+    private final JiraService jiraService;
     private final SessionService sessionService;
-    private final PluginPropertiesService pluginPropertiesService;
+    private final PropertiesService propertiesService;
+    private final ComponentsProviderService componentsProviderService;
     private final Project project;
 
-    public TimeTrackerService(@NotNull Project project) {
-        this.jiraClient = project.getService(JiraClient.class);
+    public TrackerService(@NotNull Project project) {
+        this.jiraService = project.getService(JiraService.class);
         this.sessionService = project.getService(SessionService.class);
-        this.pluginPropertiesService = project.getService(PluginPropertiesService.class);
+        this.propertiesService = project.getService(PropertiesService.class);
+        this.componentsProviderService = project.getService(ComponentsProviderService.class);;
         this.project = project;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public TimeTrackerService setName(String name) {
-        this.name = name;
-        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public TimeTrackerService setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
-        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getBranch() {
         return branch;
     }
 
-    public TimeTrackerService setBranch(String branch) {
+    public void setBranch(String branch) {
         this.branch = branch;
-        return this;
+    }
+
+    public Instant getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Instant startTime) {
+        this.startTime = startTime;
     }
 
     public void startTimer() {
@@ -110,7 +119,7 @@ public final class TimeTrackerService {
         try {
             String timeSpent = getDurationAsString(session.getDuration());
             String comment = generateComment(session, timeSpent);
-            return jiraClient.sendJiraUpdate(getIssueKey(session), timeSpent, comment);
+            return jiraService.sendJiraUpdate(getIssueKey(session), timeSpent, comment);
         } catch (Exception e) {
             logger.error("Failed to send session to Jira", e);
             return false;
@@ -132,13 +141,8 @@ public final class TimeTrackerService {
     }
 
     private String getIssueKey(Session session) {
-        return pluginPropertiesService.getPluginProperties().getProjectKey() + "-" +
+        return propertiesService.getPluginProperties().getProjectKey() + "-" +
                 session.getBranch().replaceAll("^[^0-9]*([0-9]+).*", "$1");
-    }
-
-    public void clearSessionHistory() {
-        logger.info("TimeTrackerService::clearSessionHistory()");
-        sessionService.clearSessions();
     }
 
     public String fetchCurrentBranch() {
@@ -152,11 +156,55 @@ public final class TimeTrackerService {
         return StringUtils.EMPTY;
     }
 
-    public Instant getStartTime() {
-        return startTime;
-    }
-
     public boolean isTracking() {
         return startTime != null;
+    }
+
+    public void editCurrentSession() {
+        Dimension smallFieldSize = new Dimension(150, 25);
+        JTextField nameField = new JTextField(name);
+        nameField.setPreferredSize(smallFieldSize);
+
+        JPanel fieldsPanel = new JPanel(new GridLayout(2, 2, 5, 5));
+        fieldsPanel.add(new JLabel("Name:"));
+        fieldsPanel.add(nameField);
+
+        JTextArea descriptionArea = new JTextArea(description, 5, 20);
+        descriptionArea.setFont(descriptionArea.getFont());
+        descriptionArea.setLineWrap(true);
+        descriptionArea.setWrapStyleWord(true);
+        JScrollPane descriptionScrollPane = new JBScrollPane(descriptionArea);
+        descriptionScrollPane.setPreferredSize(new Dimension(300, 150));
+
+        JPanel descriptionPanel = new JPanel(new BorderLayout(1, 1));
+        descriptionPanel.add(new JLabel("Description:"), BorderLayout.NORTH);
+        descriptionPanel.add(descriptionScrollPane, BorderLayout.CENTER);
+
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mainPanel.add(fieldsPanel, BorderLayout.NORTH);
+        mainPanel.add(descriptionPanel, BorderLayout.CENTER);
+
+        int result = JOptionPane.showConfirmDialog(null, mainPanel, "Edit Session", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            setName(nameField.getText());
+            setDescription(descriptionArea.getText());
+        }
+    }
+
+    public void startTracking() {
+        startTimer();
+        componentsProviderService.getStartTrackingButton().setEnabled(false);
+        componentsProviderService.getStopTrackingButton().setEnabled(true);
+        componentsProviderService.getEditCurrentSessionButton().setEnabled(true);
+    }
+
+    public void stopTracking() {
+        stopTimer();
+        componentsProviderService.getStartTrackingButton().setEnabled(true);
+        componentsProviderService.getStopTrackingButton().setEnabled(false);
+        componentsProviderService.getEditCurrentSessionButton().setEnabled(false);
+        JOptionPane.showMessageDialog(null, "Session has been stopped.");
     }
 }

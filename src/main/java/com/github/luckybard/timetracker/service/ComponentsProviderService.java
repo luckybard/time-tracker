@@ -1,10 +1,14 @@
-package com.github.luckybard.timetracker.ui.component;
+package com.github.luckybard.timetracker.service;
 
+import com.github.luckybard.timetracker.ui.component.TimeTrackerTable;
+import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class TimeTrackerComponents {
+@Service(Service.Level.PROJECT)
+public final class ComponentsProviderService {
     private final JLabel branchLabel = new JLabel("Branch:");
     private final JLabel nameLabel = new JLabel("Name:");
     private final JLabel elapsedTimeLabel = new JLabel("Time:");
@@ -14,11 +18,6 @@ public class TimeTrackerComponents {
     private final JButton clearHistoryButton = new JButton("Clear all history");
     private final JButton globalSettingsButton = new JButton("Settings");
     private final JButton exportButton = new JButton("Export");
-    private final TimeTrackerTable sessionTable;
-
-    public TimeTrackerComponents(Project project) {
-        sessionTable = new TimeTrackerTable(project);
-    }
 
     public JLabel getBranchLabel() {
         return branchLabel;
@@ -54,9 +53,5 @@ public class TimeTrackerComponents {
 
     public JButton getExportButton() {
         return exportButton;
-    }
-
-    public TimeTrackerTable getSessionTable() {
-        return sessionTable;
     }
 }

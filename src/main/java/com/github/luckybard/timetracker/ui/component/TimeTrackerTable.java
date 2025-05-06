@@ -2,7 +2,7 @@ package com.github.luckybard.timetracker.ui.component;
 
 import com.github.luckybard.timetracker.model.Session;
 import com.github.luckybard.timetracker.service.SessionService;
-import com.github.luckybard.timetracker.service.TimeTrackerService;
+import com.github.luckybard.timetracker.service.TrackerService;
 import com.github.luckybard.timetracker.ui.component.buttons.ButtonRenderer;
 import com.github.luckybard.timetracker.ui.component.buttons.DeleteSessionButton;
 import com.github.luckybard.timetracker.ui.component.buttons.EditSessionButton;
@@ -26,11 +26,11 @@ public class TimeTrackerTable {
     private final JBTable table;
     private final DefaultTableModel tableModel;
     private final SessionService sessionService;
-    private final TimeTrackerService timeTrackerService;
+    private final TrackerService trackerService;
 
     public TimeTrackerTable(@NotNull Project project) {
         this.sessionService = project.getService(SessionService.class);
-        this.timeTrackerService = project.getService(TimeTrackerService.class);
+        this.trackerService = project.getService(TrackerService.class);
         this.tableModel = new DefaultTableModel(new String[]{
                 "ID",
                 "Branch",
@@ -91,7 +91,7 @@ public class TimeTrackerTable {
 
     private void initializeButtons() {
         table.getColumn("Send to Jira").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Send to Jira").setCellEditor(new SendToJiraButton(sessionService, this::updateTable, timeTrackerService));
+        table.getColumn("Send to Jira").setCellEditor(new SendToJiraButton(sessionService, this::updateTable, trackerService));
 
         table.getColumn("Edit Session").setCellRenderer(new ButtonRenderer());
         table.getColumn("Edit Session").setCellEditor(new EditSessionButton(sessionService, this::updateTable));

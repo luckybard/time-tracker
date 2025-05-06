@@ -24,4 +24,35 @@
                 class="com.github.luckybard.timetracker.listener.ProjectCloseListener"
                 topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </applicationListeners>
+
+    <actions>
+        <action id="com.github.luckybard.timetracker.action.StartTrackingAction"
+                class="com.github.luckybard.timetracker.action.StartTrackingAction" text="Start Tracking Session Time">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl COMMA"/>
+        </action>
+        <action id="com.github.luckybard.timetracker.action.StopTrackingAction"
+                class="com.github.luckybard.timetracker.action.StopTrackingAction" text="Stop Tracking Session Time">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl PERIOD"/>
+        </action>
+        <action id="com.github.luckybard.timetracker.action.GlobalSettingsEditAction"
+                class="com.github.luckybard.timetracker.action.GlobalSettingsEditAction" text="Change Settings Time Tracker"
+                description="Change settings time tracker">
+            <add-to-group group-id="$LRU" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl SEMICOLON"/>
+        </action>
+        <action id="com.github.luckybard.timetracker.action.ClearSessionHistoryAction"
+                class="com.github.luckybard.timetracker.action.ClearSessionHistoryAction" text="Clear History Action"
+                description="Clear history action">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl DELETE"/>
+        </action>
+        <action id="com.github.luckybard.timetracker.action.EditCurrentSessionAction"
+                class="com.github.luckybard.timetracker.action.EditCurrentSessionAction" text="Edit Action" description="Edit action">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl E"/>
+        </action>
+        <action id="com.github.luckybard.timetracker.action.ExportExcelAction"
+                class="com.github.luckybard.timetracker.action.ExportExcelAction" text="Export Excel Action"
+                description="Export excel action">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt E"/>
+        </action>
+    </actions>
 </idea-plugin>

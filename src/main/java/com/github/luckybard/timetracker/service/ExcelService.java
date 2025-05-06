@@ -1,7 +1,10 @@
 package com.github.luckybard.timetracker.service;
 
+import com.esotericsoftware.kryo.kryo5.util.Null;
+import com.github.luckybard.timetracker.model.PluginProperties;
 import com.github.luckybard.timetracker.model.Session;
 import com.intellij.openapi.components.Service;
+import com.intellij.openapi.project.Project;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -22,8 +25,33 @@ import java.util.Map;
 import static com.github.luckybard.timetracker.util.TimeUtils.getDurationAsString;
 
 @Service(Service.Level.PROJECT)
-public final class ExcelExporterService {
-    private static final Logger logger = LoggerFactory.getLogger(ExcelExporterService.class);
+public final class ExcelService {
+    private static final Logger logger = LoggerFactory.getLogger(ExcelService.class);
+
+    private final SessionService sessionService;
+
+    public ExcelService(@Null Project project) {
+        this.sessionService = project.getService(SessionService.class);
+    }
+
+    public void promptUserAndExport() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save Excel File");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Excel Files", "xlsx"));
+        int userSelection = fileChooser.showSaveDialog(null);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            if (!fileToSave.getName().endsWith(".xlsx")) {
+                fileToSave = new File(fileToSave.getAbsolutePath() + ".xlsx");
+            }
+            try {
+                exportSessionsToExcel(sessionService.getSessions(), fileToSave);
+                JOptionPane.showMessageDialog(null, "Export completed successfully!");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error during export: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
 
     public void exportSessionsToExcel(List<Session> sessions, File file) throws IOException {
         Workbook workbook = new XSSFWorkbook();
@@ -112,25 +140,6 @@ public final class ExcelExporterService {
             Row row = sheet.createRow(rowNum++);
             row.createCell(1).setCellValue(branch);
             row.createCell(2).setCellValue(getDurationAsString(timeSpent));
-        }
-    }
-
-    public void promptUserAndExport(List<Session> sessions) {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Save Excel File");
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Excel Files", "xlsx"));
-        int userSelection = fileChooser.showSaveDialog(null);
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToSave = fileChooser.getSelectedFile();
-            if (!fileToSave.getName().endsWith(".xlsx")) {
-                fileToSave = new File(fileToSave.getAbsolutePath() + ".xlsx");
-            }
-            try {
-                exportSessionsToExcel(sessions, fileToSave);
-                JOptionPane.showMessageDialog(null, "Export completed successfully!");
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Error during export: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
         }
     }
 }

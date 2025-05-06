@@ -1,4 +1,4 @@
-package com.github.luckybard.timetracker.config;
+package com.github.luckybard.timetracker.service;
 
 import com.github.luckybard.timetracker.model.PluginProperties;
 import com.intellij.openapi.components.Service;
@@ -12,9 +12,9 @@ import java.io.IOException;
 import java.util.Base64;
 
 @Service(Service.Level.PROJECT)
-public final class JiraClient {
+public final class JiraService {
 
-    private static final Logger logger = LoggerFactory.getLogger(JiraClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(JiraService.class);
 
     public static final String WORKLOG_ENDPOINT = "/worklog";
     public static final String COMMENT_ENDPOINT = "/comment";
@@ -22,7 +22,7 @@ public final class JiraClient {
     private static final OkHttpClient client = new OkHttpClient();
     private final Project project;
 
-    public JiraClient(@NotNull Project project) {
+    public JiraService(@NotNull Project project) {
         this.project = project;
     }
 
