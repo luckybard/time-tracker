@@ -1,7 +1,6 @@
 package com.github.luckybard.timetracker.service;
 
 import com.esotericsoftware.kryo.kryo5.util.Null;
-import com.github.luckybard.timetracker.model.PluginProperties;
 import com.github.luckybard.timetracker.model.Session;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;

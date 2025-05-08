@@ -141,7 +141,7 @@ public final class TrackerService {
     }
 
     private String getIssueKey(Session session) {
-        return propertiesService.getPluginProperties().getProjectKey() + "-" +
+        return propertiesService.getJiraProjectKey() + "-" +
                 session.getBranch().replaceAll("^[^0-9]*([0-9]+).*", "$1");
     }
 

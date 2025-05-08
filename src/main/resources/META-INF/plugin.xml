@@ -13,10 +13,10 @@
         <toolWindow id="Time Tracker" icon="AllIcons.Toolwindows.ToolWindowDebugger"
                     factoryClass="com.github.luckybard.timetracker.ui.TimeTrackerToolWindowFactory"/>
 
-        <projectService serviceImplementation="com.github.luckybard.timetracker.repository.SessionStorage"/>
-        <projectService serviceImplementation="com.github.luckybard.timetracker.model.PluginProperties"/>
+        <projectService serviceImplementation="com.github.luckybard.timetracker.storage.SessionStorage"/>
+        <projectService serviceImplementation="com.github.luckybard.timetracker.storage.PropertiesStorage"/>
 
-        <postStartupActivity implementation="com.github.luckybard.timetracker.main.PluginProjectActivity"/>
+        <postStartupActivity implementation="com.github.luckybard.timetracker.activity.PluginProjectActivity"/>
     </extensions>
 
     <applicationListeners>

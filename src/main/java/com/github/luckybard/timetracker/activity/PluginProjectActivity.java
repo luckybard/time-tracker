@@ -1,4 +1,4 @@
-package com.github.luckybard.timetracker.main;
+package com.github.luckybard.timetracker.activity;
 
 import com.github.luckybard.timetracker.listener.BranchChangeListener;
 import com.intellij.openapi.project.Project;

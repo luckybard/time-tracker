@@ -1,4 +1,4 @@
-package com.github.luckybard.timetracker.repository;
+package com.github.luckybard.timetracker.storage;
 
 
 import com.github.luckybard.timetracker.model.Session;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @State(
         name = "SessionStorage",
-        storages = {@Storage("SessionStorage.xml")}
+        storages = @Storage("SessionStorage.xml")
 )
 public class SessionStorage implements PersistentStateComponent<SessionStorage.State> {
 

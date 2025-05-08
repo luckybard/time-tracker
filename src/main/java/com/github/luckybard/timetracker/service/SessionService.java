@@ -1,16 +1,14 @@
 package com.github.luckybard.timetracker.service;
 
 import com.github.luckybard.timetracker.model.Session;
-import com.github.luckybard.timetracker.repository.SessionStorage;
+import com.github.luckybard.timetracker.storage.SessionStorage;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 
 @Service(Service.Level.PROJECT)
