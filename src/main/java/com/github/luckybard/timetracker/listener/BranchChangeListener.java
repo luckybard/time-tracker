@@ -1,6 +1,6 @@
 package com.github.luckybard.timetracker.listener;
 
-import com.github.luckybard.timetracker.service.TrackerService;
+import com.github.luckybard.timetracker.controller.TrackerController;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import git4idea.repo.GitRepository;
@@ -15,11 +15,11 @@ public class BranchChangeListener implements GitRepositoryChangeListener {
 
     private static final Logger logger = LoggerFactory.getLogger(BranchChangeListener.class);
 
-    private final TrackerService trackerService;
+    private final TrackerController trackerController;
     private String currentBranch;
 
-    public BranchChangeListener(TrackerService trackerService) {
-        this.trackerService = trackerService;
+    public BranchChangeListener(TrackerController trackerController) {
+        this.trackerController = trackerController;
     }
 
     @Override
@@ -32,16 +32,16 @@ public class BranchChangeListener implements GitRepositoryChangeListener {
         }
 
         if (isFalse(newBranch.equals(currentBranch))) {
-            trackerService.stopTimer();
+            trackerController.stopTimer();
             currentBranch = newBranch;
-            trackerService.startTimer();
+            trackerController.startTimer();
         }
     }
 
     public static void register(@NotNull Project project) {
         logger.debug("BranchChangeListener::register()");
-        TrackerService trackerService = project.getService(TrackerService.class);
+        TrackerController trackerController = project.getService(TrackerController.class);
         MessageBusConnection connection = project.getMessageBus().connect();
-        connection.subscribe(GitRepository.GIT_REPO_CHANGE, new BranchChangeListener(trackerService));
+        connection.subscribe(GitRepository.GIT_REPO_CHANGE, new BranchChangeListener(trackerController));
     }
 }

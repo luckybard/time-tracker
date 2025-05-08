@@ -1,26 +1,26 @@
 package com.github.luckybard.timetracker.ui.component.buttons;
 
 import com.github.luckybard.timetracker.model.Session;
-import com.github.luckybard.timetracker.service.SessionService;
-import com.github.luckybard.timetracker.service.TrackerService;
+import com.github.luckybard.timetracker.controller.SessionController;
+import com.github.luckybard.timetracker.controller.TrackerController;
 
 import javax.swing.*;
 
 public class SendToJiraButton extends ColumnButtonEditor {
 
-    private final TrackerService trackerService;
+    private final TrackerController trackerController;
 
-    public SendToJiraButton(SessionService sessionService, Runnable reloadTable, TrackerService trackerService) {
-        super(sessionService, new JCheckBox(), "Send", reloadTable);
-        this.trackerService = trackerService;
+    public SendToJiraButton(SessionController sessionController, Runnable reloadTable, TrackerController trackerController) {
+        super(sessionController, new JCheckBox(), "Send", reloadTable);
+        this.trackerController = trackerController;
     }
 
     @Override
     public void handleButtonClick(int row) {
         String sessionId = (String) getTable().getValueAt(row, 0);
-        Session session = sessionService.getSessionById(sessionId);
+        Session session = sessionController.getSessionById(sessionId);
         if (session != null && !session.isSentToJira()) {
-            boolean success = trackerService.sendSessionToJira(session);
+            boolean success = trackerController.sendSessionToJira(session);
             if (success) {
                 session.setSentToJira(true);
                 getReloadTable().run();

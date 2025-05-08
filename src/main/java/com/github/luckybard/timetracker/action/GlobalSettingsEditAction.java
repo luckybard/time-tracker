@@ -1,6 +1,6 @@
 package com.github.luckybard.timetracker.action;
 
-import com.github.luckybard.timetracker.service.PropertiesService;
+import com.github.luckybard.timetracker.controller.PropertiesController;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +11,7 @@ public class GlobalSettingsEditAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
-        PropertiesService service = Objects.requireNonNull(anActionEvent.getProject()).getService(PropertiesService.class);
+        PropertiesController service = Objects.requireNonNull(anActionEvent.getProject()).getService(PropertiesController.class);
         service.changeSettings();
     }
 }

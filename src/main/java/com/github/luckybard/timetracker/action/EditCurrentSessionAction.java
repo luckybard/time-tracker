@@ -1,8 +1,6 @@
 package com.github.luckybard.timetracker.action;
 
-import com.github.luckybard.timetracker.service.PropertiesService;
-import com.github.luckybard.timetracker.service.SessionService;
-import com.github.luckybard.timetracker.service.TrackerService;
+import com.github.luckybard.timetracker.controller.TrackerController;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +11,7 @@ public class EditCurrentSessionAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
-        TrackerService service = Objects.requireNonNull(anActionEvent.getProject()).getService(TrackerService.class);
+        TrackerController service = Objects.requireNonNull(anActionEvent.getProject()).getService(TrackerController.class);
         service.editCurrentSession();
     }
 }

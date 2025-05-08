@@ -1,14 +1,11 @@
-package com.github.luckybard.timetracker.service;
+package com.github.luckybard.timetracker.controller;
 
-import com.github.luckybard.timetracker.ui.component.TimeTrackerTable;
 import com.intellij.openapi.components.Service;
-import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 @Service(Service.Level.PROJECT)
-public final class ComponentsProviderService {
+public final class ComponentsController {
     private final JLabel branchLabel = new JLabel("Branch:");
     private final JLabel nameLabel = new JLabel("Name:");
     private final JLabel elapsedTimeLabel = new JLabel("Time:");

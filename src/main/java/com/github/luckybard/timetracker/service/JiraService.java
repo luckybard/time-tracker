@@ -1,6 +1,6 @@
 package com.github.luckybard.timetracker.service;
 
-import com.github.luckybard.timetracker.model.Properties;
+import com.github.luckybard.timetracker.controller.PropertiesController;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
 import okhttp3.*;
@@ -20,10 +20,10 @@ public final class JiraService {
     public static final String COMMENT_ENDPOINT = "/comment";
 
     private static final OkHttpClient client = new OkHttpClient();
-    private final PropertiesService propertiesService;
+    private final PropertiesController propertiesController;
 
     public JiraService(@NotNull Project project) {
-        this.propertiesService = project.getService(PropertiesService.class);
+        this.propertiesController = project.getService(PropertiesController.class);
     }
 
     public boolean sendJiraUpdate(String issueKey, String timeSpent, String comment) {
@@ -56,7 +56,7 @@ public final class JiraService {
 
     private Request buildRequest(String issueKey, String endpoint, String jsonBody) {
         return new Request.Builder()
-                .url(propertiesService.getJiraUrl() + "/rest/api/2/issue/" + issueKey + endpoint)
+                .url(propertiesController.getJiraUrl() + "/rest/api/2/issue/" + issueKey + endpoint)
                 .header("Authorization", "Basic " + getAuthHeader())
                 .post(RequestBody.create(jsonBody, MediaType.get("application/json")))
                 .build();
@@ -72,7 +72,7 @@ public final class JiraService {
     }
 
     private String getAuthHeader() {
-        String credentials = propertiesService.getJiraUsername() + ":" + propertiesService.getJiraApiToken();
+        String credentials = propertiesController.getJiraUsername() + ":" + propertiesController.getJiraApiToken();
         return Base64.getEncoder().encodeToString(credentials.getBytes());
     }
 }

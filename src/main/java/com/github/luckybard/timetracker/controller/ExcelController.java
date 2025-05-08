@@ -1,4 +1,4 @@
-package com.github.luckybard.timetracker.service;
+package com.github.luckybard.timetracker.controller;
 
 import com.esotericsoftware.kryo.kryo5.util.Null;
 import com.github.luckybard.timetracker.model.Session;
@@ -24,13 +24,13 @@ import java.util.Map;
 import static com.github.luckybard.timetracker.util.TimeUtils.getDurationAsString;
 
 @Service(Service.Level.PROJECT)
-public final class ExcelService {
-    private static final Logger logger = LoggerFactory.getLogger(ExcelService.class);
+public final class ExcelController {
+    private static final Logger logger = LoggerFactory.getLogger(ExcelController.class);
 
-    private final SessionService sessionService;
+    private final SessionController sessionController;
 
-    public ExcelService(@Null Project project) {
-        this.sessionService = project.getService(SessionService.class);
+    public ExcelController(@Null Project project) {
+        this.sessionController = project.getService(SessionController.class);
     }
 
     public void promptUserAndExport() {
@@ -44,7 +44,7 @@ public final class ExcelService {
                 fileToSave = new File(fileToSave.getAbsolutePath() + ".xlsx");
             }
             try {
-                exportSessionsToExcel(sessionService.getSessions(), fileToSave);
+                exportSessionsToExcel(sessionController.getSessions(), fileToSave);
                 JOptionPane.showMessageDialog(null, "Export completed successfully!");
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Error during export: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

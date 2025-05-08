@@ -1,6 +1,7 @@
-package com.github.luckybard.timetracker.service;
+package com.github.luckybard.timetracker.controller;
 
 import com.github.luckybard.timetracker.model.Session;
+import com.github.luckybard.timetracker.service.JiraService;
 import com.github.luckybard.timetracker.util.InstantFormatter;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
@@ -22,25 +23,25 @@ import static org.apache.commons.lang3.BooleanUtils.isFalse;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
 @Service(Service.Level.PROJECT)
-public final class TrackerService {
+public final class TrackerController {
 
-    private static final Logger logger = LoggerFactory.getLogger(TrackerService.class);
+    private static final Logger logger = LoggerFactory.getLogger(TrackerController.class);
 
     private String branch;
     private String name;
     private String description;
     private Instant startTime;
     private final JiraService jiraService;
-    private final SessionService sessionService;
-    private final PropertiesService propertiesService;
-    private final ComponentsProviderService componentsProviderService;
+    private final SessionController sessionController;
+    private final PropertiesController propertiesController;
+    private final ComponentsController componentsController;
     private final Project project;
 
-    public TrackerService(@NotNull Project project) {
+    public TrackerController(@NotNull Project project) {
         this.jiraService = project.getService(JiraService.class);
-        this.sessionService = project.getService(SessionService.class);
-        this.propertiesService = project.getService(PropertiesService.class);
-        this.componentsProviderService = project.getService(ComponentsProviderService.class);;
+        this.sessionController = project.getService(SessionController.class);
+        this.propertiesController = project.getService(PropertiesController.class);
+        this.componentsController = project.getService(ComponentsController.class);;
         this.project = project;
     }
 
@@ -87,7 +88,7 @@ public final class TrackerService {
     public void stopTimer() {
         logger.info("TimeTrackerService::stopTimer(), stopping timer for branch: {}", fetchCurrentBranch());
         if (isBranchValid()) {
-            sessionService.addSession(createSession());
+            sessionController.addSession(createSession());
         }
         resetTimer();
     }
@@ -141,7 +142,7 @@ public final class TrackerService {
     }
 
     private String getIssueKey(Session session) {
-        return propertiesService.getJiraProjectKey() + "-" +
+        return propertiesController.getJiraProjectKey() + "-" +
                 session.getBranch().replaceAll("^[^0-9]*([0-9]+).*", "$1");
     }
 
@@ -195,16 +196,16 @@ public final class TrackerService {
 
     public void startTracking() {
         startTimer();
-        componentsProviderService.getStartTrackingButton().setEnabled(false);
-        componentsProviderService.getStopTrackingButton().setEnabled(true);
-        componentsProviderService.getEditCurrentSessionButton().setEnabled(true);
+        componentsController.getStartTrackingButton().setEnabled(false);
+        componentsController.getStopTrackingButton().setEnabled(true);
+        componentsController.getEditCurrentSessionButton().setEnabled(true);
     }
 
     public void stopTracking() {
         stopTimer();
-        componentsProviderService.getStartTrackingButton().setEnabled(true);
-        componentsProviderService.getStopTrackingButton().setEnabled(false);
-        componentsProviderService.getEditCurrentSessionButton().setEnabled(false);
+        componentsController.getStartTrackingButton().setEnabled(true);
+        componentsController.getStopTrackingButton().setEnabled(false);
+        componentsController.getEditCurrentSessionButton().setEnabled(false);
         JOptionPane.showMessageDialog(null, "Session has been stopped.");
     }
 }

@@ -1,6 +1,6 @@
 package com.github.luckybard.timetracker.action;
 
-import com.github.luckybard.timetracker.service.SessionService;
+import com.github.luckybard.timetracker.controller.SessionController;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +11,7 @@ public class ClearSessionHistoryAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
-        SessionService service = Objects.requireNonNull(anActionEvent.getProject()).getService(SessionService.class);
+        SessionController service = Objects.requireNonNull(anActionEvent.getProject()).getService(SessionController.class);
         service.clearSessions();
     }
 }

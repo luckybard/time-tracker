@@ -1,8 +1,8 @@
 package com.github.luckybard.timetracker.ui.component;
 
 import com.github.luckybard.timetracker.model.Session;
-import com.github.luckybard.timetracker.service.SessionService;
-import com.github.luckybard.timetracker.service.TrackerService;
+import com.github.luckybard.timetracker.controller.SessionController;
+import com.github.luckybard.timetracker.controller.TrackerController;
 import com.github.luckybard.timetracker.ui.component.buttons.ButtonRenderer;
 import com.github.luckybard.timetracker.ui.component.buttons.DeleteSessionButton;
 import com.github.luckybard.timetracker.ui.component.buttons.EditSessionButton;
@@ -25,12 +25,12 @@ public class TimeTrackerTable {
 
     private final JBTable table;
     private final DefaultTableModel tableModel;
-    private final SessionService sessionService;
-    private final TrackerService trackerService;
+    private final SessionController sessionController;
+    private final TrackerController trackerController;
 
     public TimeTrackerTable(@NotNull Project project) {
-        this.sessionService = project.getService(SessionService.class);
-        this.trackerService = project.getService(TrackerService.class);
+        this.sessionController = project.getService(SessionController.class);
+        this.trackerController = project.getService(TrackerController.class);
         this.tableModel = new DefaultTableModel(new String[]{
                 "ID",
                 "Branch",
@@ -63,7 +63,7 @@ public class TimeTrackerTable {
 
         SwingUtilities.invokeLater(() -> {
             clearTable();
-            List<Session> sessions = sessionService.getSessions();
+            List<Session> sessions = sessionController.getSessions();
             for (Session session : sessions) {
                 tableModel.addRow(new Object[]{
                         session.getId(),
@@ -91,13 +91,13 @@ public class TimeTrackerTable {
 
     private void initializeButtons() {
         table.getColumn("Send to Jira").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Send to Jira").setCellEditor(new SendToJiraButton(sessionService, this::updateTable, trackerService));
+        table.getColumn("Send to Jira").setCellEditor(new SendToJiraButton(sessionController, this::updateTable, trackerController));
 
         table.getColumn("Edit Session").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Edit Session").setCellEditor(new EditSessionButton(sessionService, this::updateTable));
+        table.getColumn("Edit Session").setCellEditor(new EditSessionButton(sessionController, this::updateTable));
 
         table.getColumn("Delete Session").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Delete Session").setCellEditor(new DeleteSessionButton(sessionService, this::updateTable, tableModel));
+        table.getColumn("Delete Session").setCellEditor(new DeleteSessionButton(sessionController, this::updateTable, tableModel));
     }
 
     private String formatDuration(Duration duration) {
