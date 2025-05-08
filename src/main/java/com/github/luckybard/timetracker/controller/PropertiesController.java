@@ -1,0 +1,50 @@
+package com.github.luckybard.timetracker.controller;
+
+import com.github.luckybard.timetracker.service.PropertiesService;
+import com.intellij.openapi.components.Service;
+import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+
+@Service(Service.Level.PROJECT)
+public final class PropertiesController {
+
+    private static final Logger logger = LoggerFactory.getLogger(PropertiesController.class);
+
+    private PropertiesService service;
+
+    public PropertiesController(@NotNull Project project) {
+        this.service = project.getService(PropertiesService.class);
+    }
+
+    public void changeSettings() {
+        JTextField url = new JTextField(service.getJiraUrl());
+        JTextField token = new JTextField(service.getJiraApiToken());
+        JTextField username = new JTextField(service.getJiraUsername());
+        JTextField projectKey = new JTextField(service.getJiraProjectKey());
+
+        JPanel panel = new JPanel(new GridLayout(4, 2));
+        panel.add(new JLabel("Url:"));
+        panel.add(url);
+        panel.add(new JLabel("Token:"));
+        panel.add(token);
+        panel.add(new JLabel("Username:"));
+        panel.add(username);
+        panel.add(new JLabel("ProjectKey:"));
+        panel.add(projectKey);
+        panel.setPreferredSize(new Dimension(300, 150));
+
+        int result = JOptionPane.showConfirmDialog(null, panel,
+                "Edit Settings", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+           service.updateConfiguration(url.getText(), token.getText(), username.getText(), projectKey.getText());
+        }
+    }
+
+
+}
