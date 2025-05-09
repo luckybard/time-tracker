@@ -9,8 +9,8 @@ import javax.swing.*;
 
 public class SendToJiraButton extends ColumnButtonEditor {
 
-    private JiraService jiraService;
-    private SessionService sessionService;
+    private final JiraService jiraService;
+    private final SessionService sessionService;
 
     public SendToJiraButton(Project project) {
         super(project, new JCheckBox(), "Send");

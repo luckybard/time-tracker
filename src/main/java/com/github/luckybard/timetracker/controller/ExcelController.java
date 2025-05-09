@@ -15,7 +15,7 @@ import java.io.IOException;
 public final class ExcelController {
     private static final Logger logger = LoggerFactory.getLogger(ExcelController.class);
 
-    private ExportService exportService;
+    private final ExportService exportService;
 
     public ExcelController(@Null Project project) {
         this.exportService = project.getService(ExportService.class);

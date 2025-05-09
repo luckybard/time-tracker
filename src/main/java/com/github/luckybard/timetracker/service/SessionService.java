@@ -16,7 +16,7 @@ public final class SessionService {
 
     private static final Logger logger = LoggerFactory.getLogger(SessionService.class);
 
-    private SessionStorage storage;
+    private final SessionStorage storage;
 
     public SessionService(@NotNull Project project) {
         this.storage = project.getService(SessionStorage.class);

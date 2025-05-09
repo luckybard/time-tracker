@@ -22,7 +22,7 @@ import static com.github.luckybard.timetracker.util.TimeUtils.getDurationAsStrin
 @Service(Service.Level.PROJECT)
 public final class ExportService {
 
-    private SessionService sessionService;
+    private final SessionService sessionService;
 
     public ExportService(@Null Project project) {
         this.sessionService = project.getService(SessionService.class);

@@ -14,7 +14,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class EditSessionButton extends ColumnButtonEditor {
 
-    private SessionService sessionService;
+    private final SessionService sessionService;
 
     public EditSessionButton(Project project) {
         super(project, new JCheckBox(), "Edit");

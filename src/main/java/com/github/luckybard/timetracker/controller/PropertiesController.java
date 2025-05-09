@@ -15,7 +15,7 @@ public final class PropertiesController {
 
     private static final Logger logger = LoggerFactory.getLogger(PropertiesController.class);
 
-    private PropertiesService service;
+    private final PropertiesService service;
 
     public PropertiesController(@NotNull Project project) {
         this.service = project.getService(PropertiesService.class);

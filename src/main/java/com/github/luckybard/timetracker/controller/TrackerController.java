@@ -17,8 +17,8 @@ public final class TrackerController {
 
     private static final Logger logger = LoggerFactory.getLogger(TrackerController.class);
 
-    private ComponentsController componentsController;
-    private TrackingService trackingService;
+    private final ComponentsController componentsController;
+    private final TrackingService trackingService;
 
     public TrackerController(@NotNull Project project) {
         this.componentsController = project.getService(ComponentsController.class);
