@@ -1,12 +1,14 @@
 package com.github.luckybard.timetracker.storage;
 
-import com.github.luckybard.timetracker.model.Properties;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.annotations.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @State(
         name = "PropertiesStorage",
@@ -16,7 +18,7 @@ public class PropertiesStorage implements PersistentStateComponent<PropertiesSto
 
     public static class State {
         @Tag("properties")
-        public Properties properties = new Properties();
+        public Map<String, String> properties = new HashMap<>();
     }
 
     private State state = new State();
@@ -33,22 +35,10 @@ public class PropertiesStorage implements PersistentStateComponent<PropertiesSto
     }
 
     public String getProperty(String key) {
-        return state.properties.getProperty(key);
+        return state.properties.get(key);
     }
 
-    public void setProperty(String key, String value) {
-        state.properties.setProperty(key, value);
-    }
-
-    public boolean hasProperty(String key) {
-        return state.properties.hasProperty(key);
-    }
-
-    public void removeProperty(String key) {
-        state.properties.removeProperty(key);
-    }
-
-    public Properties getProperties() {
+    public Map<String, String> getProperties() {
         return state.properties;
     }
 }

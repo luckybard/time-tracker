@@ -1,7 +1,8 @@
 package com.github.luckybard.timetracker.ui.component.buttons;
 
-import com.github.luckybard.timetracker.controller.SessionController;
+import com.intellij.openapi.project.Project;
 import com.intellij.ui.table.JBTable;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,15 +11,13 @@ public abstract class ColumnButtonEditor extends DefaultCellEditor {
     private final JButton button;
     private String label;
     private boolean isClicked;
-    public final Runnable reloadTable;
-    protected SessionController sessionController;
- 
-    public ColumnButtonEditor(SessionController sessionController, JCheckBox checkBox, String label, Runnable reloadTable) {
+    public Project project;
+
+    public ColumnButtonEditor(@NotNull Project project, JCheckBox checkBox, String label) {
         super(checkBox);
-        this.sessionController = sessionController;
+        this.project = project;
         this.button = new JButton();
         this.button.setOpaque(true);
-        this.reloadTable = reloadTable;
         this.label = label;
         this.button.setText(label);
         this.button.addActionListener(e -> fireEditingStopped());
@@ -45,10 +44,6 @@ public abstract class ColumnButtonEditor extends DefaultCellEditor {
 
     public JBTable getTable() {
         return (JBTable) SwingUtilities.getAncestorOfClass(JBTable.class, this.button);
-    }
-
-    public Runnable getReloadTable() {
-        return reloadTable;
     }
 
     public boolean confirmAction(String message, String title) {

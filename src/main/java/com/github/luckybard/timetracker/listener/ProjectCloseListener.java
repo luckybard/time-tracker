@@ -1,6 +1,6 @@
 package com.github.luckybard.timetracker.listener;
 
-import com.github.luckybard.timetracker.controller.TrackerController;
+import com.github.luckybard.timetracker.service.TrackingService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManagerListener;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +14,7 @@ public class ProjectCloseListener implements ProjectManagerListener {
     @Override
     public void projectClosing(@NotNull Project project) {
         logger.debug("ProjectCloseListener::projectClosing()");
-        TrackerController service = project.getService(TrackerController.class);
+        TrackingService service = project.getService(TrackingService.class);
         service.stopTimer();
     }
 }

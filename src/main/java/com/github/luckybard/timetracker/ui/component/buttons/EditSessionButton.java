@@ -1,8 +1,9 @@
 package com.github.luckybard.timetracker.ui.component.buttons;
 
 import com.github.luckybard.timetracker.model.Session;
-import com.github.luckybard.timetracker.controller.SessionController;
+import com.github.luckybard.timetracker.service.SessionService;
 import com.github.luckybard.timetracker.util.TimeUtils;
+import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBScrollPane;
 
 import javax.swing.*;
@@ -12,14 +13,18 @@ import static com.github.luckybard.timetracker.util.TimeUtils.isEndTimeBeforeSta
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class EditSessionButton extends ColumnButtonEditor {
-    public EditSessionButton(SessionController sessionController, Runnable reloadTable) {
-        super(sessionController, new JCheckBox(), "Edit", reloadTable);
+
+    private SessionService sessionService;
+
+    public EditSessionButton(Project project) {
+        super(project, new JCheckBox(), "Edit");
+        this.sessionService = project.getService(SessionService.class);
     }
 
     @Override
     public void handleButtonClick(int row) {
         String sessionId = (String) getTable().getValueAt(row, 0);
-        Session session = sessionController.getSessionById(sessionId);
+        Session session = sessionService.getSessionById(sessionId);
         if (session != null && !session.isSentToJira()) {
             JTextField branchField = new JTextField(session.getBranch());
             JTextField nameField = new JTextField(session.getName());
@@ -104,7 +109,6 @@ public class EditSessionButton extends ColumnButtonEditor {
                     session.setDate(date);
                     session.setStartTime(startTime);
                     session.setEndTime(endTime);
-                    getReloadTable().run();
                 }
             }
         }

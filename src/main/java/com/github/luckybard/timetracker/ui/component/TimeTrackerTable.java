@@ -1,8 +1,7 @@
 package com.github.luckybard.timetracker.ui.component;
 
 import com.github.luckybard.timetracker.model.Session;
-import com.github.luckybard.timetracker.controller.SessionController;
-import com.github.luckybard.timetracker.controller.TrackerController;
+import com.github.luckybard.timetracker.service.SessionService;
 import com.github.luckybard.timetracker.ui.component.buttons.ButtonRenderer;
 import com.github.luckybard.timetracker.ui.component.buttons.DeleteSessionButton;
 import com.github.luckybard.timetracker.ui.component.buttons.EditSessionButton;
@@ -25,12 +24,10 @@ public class TimeTrackerTable {
 
     private final JBTable table;
     private final DefaultTableModel tableModel;
-    private final SessionController sessionController;
-    private final TrackerController trackerController;
+    private final SessionService sessionService;
 
     public TimeTrackerTable(@NotNull Project project) {
-        this.sessionController = project.getService(SessionController.class);
-        this.trackerController = project.getService(TrackerController.class);
+        this.sessionService = project.getService(SessionService.class);
         this.tableModel = new DefaultTableModel(new String[]{
                 "ID",
                 "Branch",
@@ -45,7 +42,7 @@ public class TimeTrackerTable {
         }, 0);
         this.table = new JBTable(tableModel);
 
-        updateTable();
+        updateTable(project);
     }
 
     public void clearTable() {
@@ -58,12 +55,12 @@ public class TimeTrackerTable {
         return new JBScrollPane(table);
     }
 
-    public void updateTable() {
+    public void updateTable(@NotNull Project project) {
         int selectedRowBeforeUpdate = table.getSelectedRow();
 
         SwingUtilities.invokeLater(() -> {
             clearTable();
-            List<Session> sessions = sessionController.getSessions();
+            List<Session> sessions = sessionService.getSessions();
             for (Session session : sessions) {
                 tableModel.addRow(new Object[]{
                         session.getId(),
@@ -79,7 +76,7 @@ public class TimeTrackerTable {
                 });
             }
 
-            initializeButtons();
+            initializeButtons(project);
 
             if (selectedRowBeforeUpdate >= 0 && selectedRowBeforeUpdate < tableModel.getRowCount()) {
                 table.setRowSelectionInterval(selectedRowBeforeUpdate, selectedRowBeforeUpdate);
@@ -89,15 +86,15 @@ public class TimeTrackerTable {
         });
     }
 
-    private void initializeButtons() {
+    private void initializeButtons(@NotNull Project project) {
         table.getColumn("Send to Jira").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Send to Jira").setCellEditor(new SendToJiraButton(sessionController, this::updateTable, trackerController));
+        table.getColumn("Send to Jira").setCellEditor(new SendToJiraButton(project));
 
         table.getColumn("Edit Session").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Edit Session").setCellEditor(new EditSessionButton(sessionController, this::updateTable));
+        table.getColumn("Edit Session").setCellEditor(new EditSessionButton(project));
 
         table.getColumn("Delete Session").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Delete Session").setCellEditor(new DeleteSessionButton(sessionController, this::updateTable, tableModel));
+        table.getColumn("Delete Session").setCellEditor(new DeleteSessionButton(project, tableModel));
     }
 
     private String formatDuration(Duration duration) {

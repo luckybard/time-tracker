@@ -42,7 +42,7 @@ public final class PropertiesController {
                 "Edit Settings", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-           service.updateConfiguration(url.getText(), token.getText(), username.getText(), projectKey.getText());
+            service.updateConfiguration(url.getText(), token.getText(), username.getText(), projectKey.getText());
         }
     }
 

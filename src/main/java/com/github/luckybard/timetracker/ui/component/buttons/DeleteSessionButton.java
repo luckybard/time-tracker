@@ -1,17 +1,20 @@
 package com.github.luckybard.timetracker.ui.component.buttons;
 
 import com.github.luckybard.timetracker.model.Session;
-import com.github.luckybard.timetracker.controller.SessionController;
+import com.github.luckybard.timetracker.service.SessionService;
+import com.intellij.openapi.project.Project;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class DeleteSessionButton extends ColumnButtonEditor {
     private final DefaultTableModel tableModel;
+    private final SessionService sessionService;
 
-    public DeleteSessionButton(SessionController sessionController, Runnable reloadTable, DefaultTableModel tableModel) {
-        super(sessionController, new JCheckBox(), "Delete", reloadTable);
+    public DeleteSessionButton(Project project, DefaultTableModel tableModel) {
+        super(project, new JCheckBox(), "Delete");
         this.tableModel = tableModel;
+        this.sessionService = project.getService(SessionService.class);
     }
 
     @Override
@@ -19,11 +22,11 @@ public class DeleteSessionButton extends ColumnButtonEditor {
         if (row < 0 || row >= tableModel.getRowCount()) return;
 
         String sessionId = (String) tableModel.getValueAt(row, 0);
-        Session session = sessionController.getSessionById(sessionId);
+        Session session = sessionService.getSessionById(sessionId);
 
         if (session != null) {
             if (confirmAction("Are you sure about deleting this session?", "Delete")) {
-                sessionController.getSessions().remove(session);
+                sessionService.removedSession(session);
             }
         }
     }

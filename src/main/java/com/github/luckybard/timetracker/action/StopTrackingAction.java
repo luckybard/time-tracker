@@ -12,6 +12,6 @@ public class StopTrackingAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
         TrackerController service = Objects.requireNonNull(anActionEvent.getProject()).getService(TrackerController.class);
-        service.stopTimer();
+        service.stopTracking();
     }
 }

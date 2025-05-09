@@ -35,7 +35,8 @@
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl PERIOD"/>
         </action>
         <action id="com.github.luckybard.timetracker.action.GlobalSettingsEditAction"
-                class="com.github.luckybard.timetracker.action.GlobalSettingsEditAction" text="Change Settings Time Tracker"
+                class="com.github.luckybard.timetracker.action.GlobalSettingsEditAction"
+                text="Change Settings Time Tracker"
                 description="Change settings time tracker">
             <add-to-group group-id="$LRU" anchor="first"/>
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl SEMICOLON"/>
@@ -46,7 +47,8 @@
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl DELETE"/>
         </action>
         <action id="com.github.luckybard.timetracker.action.EditCurrentSessionAction"
-                class="com.github.luckybard.timetracker.action.EditCurrentSessionAction" text="Edit Action" description="Edit action">
+                class="com.github.luckybard.timetracker.action.EditCurrentSessionAction" text="Edit Action"
+                description="Edit action">
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl E"/>
         </action>
         <action id="com.github.luckybard.timetracker.action.ExportExcelAction"

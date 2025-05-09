@@ -61,7 +61,7 @@ public class TimeTrackerPanel {
         componentsController.getGlobalSettingsButton().addActionListener(e -> propertiesController.changeSettings());
         componentsController.getExportButton().addActionListener(e -> excelController.promptUserAndExport());
 
-        Timer uiUpdateTimer = new Timer(1000, e -> updateUI());
+        Timer uiUpdateTimer = new Timer(1000, e -> updateUI(project));
         uiUpdateTimer.start();
     }
 
@@ -69,7 +69,7 @@ public class TimeTrackerPanel {
         return panel;
     }
 
-    private void updateUI() {
+    private void updateUI(@NotNull Project project) {
         checkForLazyUI();
         String name = trackerController.getName();
         componentsController.getNameLabel().setText("Name: " + (isNotBlank(name) ? name : EMPTY));
@@ -87,7 +87,7 @@ public class TimeTrackerPanel {
             componentsController.getElapsedTimeLabel().setText("Time:");
         }
 
-        sessionTable.updateTable();
+        sessionTable.updateTable(project);
     }
 
     private void checkForLazyUI() {

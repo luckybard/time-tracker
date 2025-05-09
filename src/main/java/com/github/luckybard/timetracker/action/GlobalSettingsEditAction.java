@@ -5,13 +5,13 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 public class GlobalSettingsEditAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
-        PropertiesController service = Objects.requireNonNull(anActionEvent.getProject()).getService(PropertiesController.class);
+        PropertiesController service = requireNonNull(anActionEvent.getProject()).getService(PropertiesController.class);
         service.changeSettings();
     }
 }
