@@ -26,10 +26,6 @@ public final class SessionService {
         return Objects.requireNonNull(getState()).sessions;
     }
 
-    private SessionStorage.State getState() {
-        return storage.getState();
-    }
-
     public Session getSessionById(String sessionId) {
         return getSessions().stream()
                 .filter(s -> s.getId().equals(sessionId))
@@ -45,5 +41,9 @@ public final class SessionService {
     public void removeSession(Session session) {
         logger.info("SessionService:removeSession(), {}", session);
         getSessions().remove(session);
+    }
+
+    private SessionStorage.State getState() {
+        return storage.getState();
     }
 }
