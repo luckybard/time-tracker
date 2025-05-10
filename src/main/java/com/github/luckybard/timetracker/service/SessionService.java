@@ -44,6 +44,6 @@ public final class SessionService {
 
     public void removedSession(Session session) {
         logger.info("SessionService:removedSession(), {}", session);
-        getSessions().add(session);
+        getSessions().remove(session);
     }
 }

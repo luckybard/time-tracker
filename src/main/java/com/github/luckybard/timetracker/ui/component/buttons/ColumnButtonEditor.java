@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public abstract class ColumnButtonEditor extends DefaultCellEditor {
-    private final JButton button;
+    protected final JButton button;
     private String label;
     private boolean isClicked;
     public Project project;

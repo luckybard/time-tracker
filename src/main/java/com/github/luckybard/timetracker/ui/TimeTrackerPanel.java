@@ -14,6 +14,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class TimeTrackerPanel {
+
     private final JPanel panel;
     private final TimeTrackerTable sessionTable;
 
@@ -29,48 +30,77 @@ public class TimeTrackerPanel {
         this.sessionController = project.getService(SessionController.class);
         this.componentsController = project.getService(ComponentsController.class);
         this.propertiesController = project.getService(PropertiesController.class);
+        this.sessionTable = new TimeTrackerTable(project);
+        this.panel = new JPanel(new BorderLayout());
 
-        sessionTable = new TimeTrackerTable(project);
-        panel = new JPanel(new BorderLayout());
+        initializePanel();
+        addButtonsListener();
+        initializeUIUpdater(project);
+    }
 
-        JPanel trackingButtons = new JPanel(new GridLayout(1, 2));
+    private void initializePanel() {
+        panel.add(prepareNavigationPanel(), BorderLayout.NORTH);
+        panel.add(prepareSessionTablePanel(), BorderLayout.CENTER);
+    }
 
-        trackingButtons.add(componentsController.getStartTrackingButton());
-        trackingButtons.add(componentsController.getStopTrackingButton());
+    private JScrollPane prepareSessionTablePanel() {
+        return sessionTable.getTableScrollPane();
+    }
 
+    private JPanel prepareNavigationPanel() {
+        JPanel trackingButtons = prepareTrackingButtons();
+        JPanel settingsButtons = prepareSettingsButtons();
+
+        JPanel navigationPanel = new JPanel(new GridLayout(5, 1));
+        navigationPanel.add(componentsController.getNameLabel());
+        navigationPanel.add(componentsController.getBranchLabel());
+        navigationPanel.add(componentsController.getElapsedTimeLabel());
+        navigationPanel.add(trackingButtons, BorderLayout.AFTER_LAST_LINE);
+        navigationPanel.add(settingsButtons, BorderLayout.AFTER_LAST_LINE);
+        return navigationPanel;
+    }
+
+    private JPanel prepareSettingsButtons() {
         JPanel settingsButtons = new JPanel(new GridLayout(1, 4));
         settingsButtons.add(componentsController.getClearHistoryButton());
         settingsButtons.add(componentsController.getGlobalSettingsButton());
         settingsButtons.add(componentsController.getEditCurrentSessionButton());
         settingsButtons.add(componentsController.getExportButton());
+        return settingsButtons;
+    }
 
-        JPanel topPanel = new JPanel(new GridLayout(5, 1));
-        topPanel.add(componentsController.getNameLabel());
-        topPanel.add(componentsController.getBranchLabel());
-        topPanel.add(componentsController.getElapsedTimeLabel());
-        topPanel.add(trackingButtons, BorderLayout.AFTER_LAST_LINE);
-        topPanel.add(settingsButtons, BorderLayout.AFTER_LAST_LINE);
+    private JPanel prepareTrackingButtons() {
+        JPanel trackingButtons = new JPanel(new GridLayout(1, 2));
+        trackingButtons.add(componentsController.getStartTrackingButton());
+        trackingButtons.add(componentsController.getStopTrackingButton());
+        return trackingButtons;
+    }
 
-        panel.add(topPanel, BorderLayout.NORTH);
-        panel.add(sessionTable.getTableScrollPane(), BorderLayout.CENTER);
+    private void initializeUIUpdater(Project project) {
+        Timer uiUpdateTimer = new Timer(1000, e -> updateUI(project));
+        uiUpdateTimer.start();
+    }
 
+    private void addButtonsListener() {
         componentsController.getStopTrackingButton().addActionListener(e -> trackerController.stopTracking());
         componentsController.getStartTrackingButton().addActionListener(e -> trackerController.startTracking());
         componentsController.getClearHistoryButton().addActionListener(e -> sessionController.clearSessions());
         componentsController.getEditCurrentSessionButton().addActionListener(e -> trackerController.editCurrentSession());
         componentsController.getGlobalSettingsButton().addActionListener(e -> propertiesController.changeSettings());
         componentsController.getExportButton().addActionListener(e -> excelController.promptUserAndExport());
-
-        Timer uiUpdateTimer = new Timer(1000, e -> updateUI(project));
-        uiUpdateTimer.start();
     }
 
-    public JPanel getContent() {
-        return panel;
-    }
-
-    private void updateUI(@NotNull Project project) {
+    private void updateUI(Project project) {
         checkForLazyUI();
+        updateNavigationPanelUI();
+        updateSessionTablePanelUI(project);
+    }
+
+    private void updateSessionTablePanelUI(Project project) {
+        sessionTable.updateTable(project);
+    }
+
+    private void updateNavigationPanelUI() {
         String name = trackerController.getName();
         componentsController.getNameLabel().setText("Name: " + (isNotBlank(name) ? name : EMPTY));
         String currentBranch = trackerController.getBranch();
@@ -86,13 +116,15 @@ public class TimeTrackerPanel {
         } else {
             componentsController.getElapsedTimeLabel().setText("Time:");
         }
-
-        sessionTable.updateTable(project);
     }
 
     private void checkForLazyUI() {
         if (componentsController.getStartTrackingButton().isEnabled() && componentsController.getStopTrackingButton().isEnabled()) {
             trackerController.startTracking();
         }
+    }
+
+    public JPanel getContent() {
+        return panel;
     }
 }

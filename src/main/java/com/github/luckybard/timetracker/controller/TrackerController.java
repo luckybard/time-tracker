@@ -43,7 +43,7 @@ public final class TrackerController {
 
     public void editCurrentSession() {
         Dimension smallFieldSize = new Dimension(150, 25);
-        JTextField nameField = new JTextField();
+        JTextField nameField = new JTextField(trackingService.getName());
         nameField.setPreferredSize(smallFieldSize);
 
         JPanel fieldsPanel = new JPanel(new GridLayout(2, 2, 5, 5));
