@@ -1,10 +1,7 @@
-package com.github.luckybard.timetracker.ui.component;
+package com.github.luckybard.timetracker.ui.table;
 
 import com.github.luckybard.timetracker.model.Session;
 import com.github.luckybard.timetracker.service.SessionService;
-import com.github.luckybard.timetracker.ui.component.buttons.DeleteSessionButton;
-import com.github.luckybard.timetracker.ui.component.buttons.EditSessionButton;
-import com.github.luckybard.timetracker.ui.component.buttons.SendToJiraButton;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;

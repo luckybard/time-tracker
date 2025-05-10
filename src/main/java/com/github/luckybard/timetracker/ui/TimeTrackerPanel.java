@@ -1,7 +1,7 @@
 package com.github.luckybard.timetracker.ui;
 
 import com.github.luckybard.timetracker.controller.*;
-import com.github.luckybard.timetracker.ui.component.TimeTrackerTable;
+import com.github.luckybard.timetracker.ui.table.TimeTrackerTable;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 

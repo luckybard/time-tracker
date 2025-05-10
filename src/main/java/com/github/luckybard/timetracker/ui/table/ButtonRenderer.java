@@ -1,4 +1,4 @@
-package com.github.luckybard.timetracker.ui.component;
+package com.github.luckybard.timetracker.ui.table;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
