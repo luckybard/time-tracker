@@ -1,6 +1,7 @@
 package com.github.luckybard.timetracker.service;
 
 import com.esotericsoftware.kryo.kryo5.util.Null;
+import com.github.luckybard.timetracker.listener.ProjectCloseListener;
 import com.github.luckybard.timetracker.model.Session;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
@@ -8,6 +9,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,6 +25,8 @@ import static com.github.luckybard.timetracker.util.TimeUtils.getDurationAsStrin
 @Service(Service.Level.PROJECT)
 public final class ExportService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ExportService.class);
+
     private final SessionService sessionService;
 
     public ExportService(@Null Project project) {
@@ -29,6 +34,7 @@ public final class ExportService {
     }
 
     public void prepareFIle(File file) throws IOException {
+        logger.debug("ExportService::prepareFIle()");
         Map<LocalDate, Map<String, Duration>> dailyBranchTime = new HashMap<>();
         Map<LocalDate, Duration> dailyTotalTime = new HashMap<>();
         Map<String, Duration> weeklyBranchTime = new HashMap<>();

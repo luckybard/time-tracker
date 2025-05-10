@@ -22,7 +22,6 @@ public class BranchChangeListener implements GitRepositoryChangeListener {
     @Override
     public void repositoryChanged(@NotNull GitRepository repository) {
         logger.debug("BranchChangeListener::repositoryChanged()");
-
         String newBranch = repository.getCurrentBranchName();
         if (newBranch == null) {
             return;

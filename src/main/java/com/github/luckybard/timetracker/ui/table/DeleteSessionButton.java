@@ -26,7 +26,7 @@ public class DeleteSessionButton extends ColumnButtonEditor {
 
         if (session != null) {
             if (confirmAction("Are you sure about deleting this session?", "Delete")) {
-                sessionService.removedSession(session);
+                sessionService.removeSession(session);
             }
         }
     }

@@ -15,8 +15,6 @@ import java.time.Instant;
 @Service(Service.Level.PROJECT)
 public final class TrackerController {
 
-    private static final Logger logger = LoggerFactory.getLogger(TrackerController.class);
-
     private final ComponentsController componentsController;
     private final TrackingService trackingService;
 

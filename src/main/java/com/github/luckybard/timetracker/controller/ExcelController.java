@@ -13,7 +13,6 @@ import java.io.IOException;
 
 @Service(Service.Level.PROJECT)
 public final class ExcelController {
-    private static final Logger logger = LoggerFactory.getLogger(ExcelController.class);
 
     private final ExportService exportService;
 

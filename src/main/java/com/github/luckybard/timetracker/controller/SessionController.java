@@ -12,8 +12,6 @@ import javax.swing.*;
 @Service(Service.Level.PROJECT)
 public final class SessionController {
 
-    private static final Logger logger = LoggerFactory.getLogger(SessionController.class);
-
     private final SessionStorage.State state;
 
     public SessionController(@NotNull Project project) {

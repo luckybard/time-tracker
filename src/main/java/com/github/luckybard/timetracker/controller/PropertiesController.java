@@ -13,8 +13,6 @@ import java.awt.*;
 @Service(Service.Level.PROJECT)
 public final class PropertiesController {
 
-    private static final Logger logger = LoggerFactory.getLogger(PropertiesController.class);
-
     private final PropertiesService service;
 
     public PropertiesController(@NotNull Project project) {

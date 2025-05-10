@@ -32,6 +32,7 @@ public final class JiraService {
     }
 
     public boolean sendSessionToJira(Session session) {
+        logger.info("JiraService::sendSessionToJira()");
         try {
             String timeSpent = getDurationAsString(session.getDuration());
             String comment = generateComment(session, timeSpent);
@@ -42,8 +43,7 @@ public final class JiraService {
         }
     }
 
-    public boolean sendJiraUpdate(String issueKey, String timeSpent, String comment) {
-        logger.info("JiraClient::sendJiraUpdate(), Sending Jira update to {}", issueKey);
+    private boolean sendJiraUpdate(String issueKey, String timeSpent, String comment) {
         try {
             return updateIssueTime(issueKey, timeSpent) && addCommentToIssue(issueKey, comment);
         } catch (IOException e) {

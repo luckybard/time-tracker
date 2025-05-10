@@ -26,6 +26,14 @@ public final class PropertiesService {
         this.storage = project.getService(PropertiesStorage.class);
     }
 
+    public void updateConfiguration(String jiraUrl, String apiToken, String username, String projectKey) {
+        logger.info("PropertiesService::updateConfiguration()");
+        setJiraUrlKey(jiraUrl);
+        setJiraApiTokenKey(apiToken);
+        setJiraUsernameKey(username);
+        setJiraProjectKey(projectKey);
+    }
+
     public String getJiraUrl() {
         return nullizeIfDefaultValue(storage.getProperty(JIRA_URL_KEY), StringUtils.EMPTY);
     }
@@ -56,13 +64,5 @@ public final class PropertiesService {
 
     public void setJiraProjectKey(String projectKey) {
         storage.getProperties().put(JIRA_PROJECT_KEY, projectKey);
-    }
-
-    public void updateConfiguration(String jiraUrl, String apiToken, String username, String projectKey) {
-        logger.info("PropertiesService::updateConfiguration()");
-        setJiraUrlKey(jiraUrl);
-        setJiraApiTokenKey(apiToken);
-        setJiraUsernameKey(username);
-        setJiraProjectKey(projectKey);
     }
 }

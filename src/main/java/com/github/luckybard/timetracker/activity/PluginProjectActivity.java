@@ -2,6 +2,7 @@ package com.github.luckybard.timetracker.activity;
 
 import com.github.luckybard.timetracker.controller.TrackerController;
 import com.github.luckybard.timetracker.listener.BranchChangeListener;
+import com.github.luckybard.timetracker.listener.ProjectCloseListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.ProjectActivity;
 import com.intellij.util.messages.MessageBusConnection;
@@ -10,10 +11,16 @@ import kotlin.Unit;
 import kotlin.coroutines.Continuation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PluginProjectActivity implements ProjectActivity {
+
+    private static final Logger logger = LoggerFactory.getLogger(PluginProjectActivity.class);
+
     @Override
     public @Nullable Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
+        logger.debug("PluginProjectActivity::execute()");
         startTracking(project);
         registerBranchChangeListener(project);
         return null;

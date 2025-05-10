@@ -19,16 +19,17 @@ public final class TrackingService {
 
     private static final Logger logger = LoggerFactory.getLogger(TrackingService.class);
 
+    private final SessionService sessionService;
+    private final GitService gitService;
+
     private String branch;
     private String name;
     private String description;
     private Instant startTime;
-    private final GitRepositoryManager gitRepositoryManager;
-    private final SessionService sessionService;
 
     public TrackingService(@NotNull Project project) {
-        this.gitRepositoryManager = GitRepositoryManager.getInstance(project);
         this.sessionService = project.getService(SessionService.class);
+        this.gitService = project.getService(GitService.class);
     }
 
     public String getDescription() {
@@ -64,15 +65,15 @@ public final class TrackingService {
     }
 
     public void startTimer() {
-        logger.info("TimeTrackerService::startTimer()");
-        String currentBranch = fetchCurrentBranch();
-        this.branch = currentBranch;
-        this.name = currentBranch;
-        this.startTime = Instant.now();
+        logger.info("TrackingService::startTimer()");
+        String currentBranch = gitService.fetchCurrentBranch();
+        branch = currentBranch;
+        name = currentBranch;
+        startTime = Instant.now();
     }
 
     public void stopTimer() {
-        logger.info("TimeTrackerService::stopTimer(), stopping timer for branch: {}", fetchCurrentBranch());
+        logger.info("TrackingService::stopTimer()");
         if (isBranchValid()) {
             sessionService.saveSession(createSession());
         }
@@ -80,7 +81,6 @@ public final class TrackingService {
     }
 
     private Session createSession() {
-        logger.info("TimeTrackingService::createSession()");
         return new Session()
                 .setId(UUID.randomUUID().toString())
                 .setBranch(branch)
@@ -96,19 +96,8 @@ public final class TrackingService {
     }
 
     private void resetTimer() {
-        this.name = null;
-        this.branch = null;
-        this.startTime = null;
-    }
-
-    public String fetchCurrentBranch() {
-        GitRepository gitRepository = gitRepositoryManager.getRepositories().stream()
-                .findFirst()
-                .orElse(null);
-
-        if (gitRepository != null && gitRepository.getCurrentBranch() != null) {
-            return gitRepository.getCurrentBranch().getName();
-        }
-        return StringUtils.EMPTY;
+        name = null;
+        branch = null;
+        startTime = null;
     }
 }
