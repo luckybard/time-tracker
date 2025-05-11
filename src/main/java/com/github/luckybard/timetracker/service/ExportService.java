@@ -1,8 +1,8 @@
 package com.github.luckybard.timetracker.service;
 
 import com.esotericsoftware.kryo.kryo5.util.Null;
-import com.github.luckybard.timetracker.listener.ProjectCloseListener;
 import com.github.luckybard.timetracker.model.Session;
+import com.github.luckybard.timetracker.util.Dictionary;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
 import org.apache.poi.ss.usermodel.Row;
@@ -34,7 +34,7 @@ public final class ExportService {
     }
 
     public void prepareFIle(File file) throws IOException {
-        logger.debug("ExportService::prepareFIle()");
+        logger.debug("ExportService::prepareFile()");
         Map<LocalDate, Map<String, Duration>> dailyBranchTime = new HashMap<>();
         Map<LocalDate, Duration> dailyTotalTime = new HashMap<>();
         Map<String, Duration> weeklyBranchTime = new HashMap<>();
@@ -54,14 +54,14 @@ public final class ExportService {
     private void addSessions(Sheet sheet, Map<LocalDate, Map<String, Duration>> dailyBranchTime,
                              Map<LocalDate, Duration> dailyTotalTime, Map<String, Duration> weeklyBranchTime) {
         Row headerRow = sheet.createRow(0);
-        headerRow.createCell(0).setCellValue("ID");
-        headerRow.createCell(1).setCellValue("Branch");
-        headerRow.createCell(2).setCellValue("Name");
-        headerRow.createCell(3).setCellValue("Description");
-        headerRow.createCell(4).setCellValue("Date");
-        headerRow.createCell(5).setCellValue("Start Time");
-        headerRow.createCell(6).setCellValue("End Time");
-        headerRow.createCell(7).setCellValue("Duration");
+        headerRow.createCell(0).setCellValue(Dictionary.translate("id"));
+        headerRow.createCell(1).setCellValue(Dictionary.translate("branch"));
+        headerRow.createCell(2).setCellValue(Dictionary.translate("name"));
+        headerRow.createCell(3).setCellValue(Dictionary.translate("description"));
+        headerRow.createCell(4).setCellValue(Dictionary.translate("date"));
+        headerRow.createCell(5).setCellValue(Dictionary.translate("startTime"));
+        headerRow.createCell(6).setCellValue(Dictionary.translate("endTime"));
+        headerRow.createCell(7).setCellValue(Dictionary.translate("duration"));
 
         int rowNum = 1;
         for (Session session : sessionService.getSessions()) {
@@ -88,10 +88,10 @@ public final class ExportService {
                                Map<LocalDate, Duration> dailyTotalTime, Map<String, Duration> weeklyBranchTime) {
         int rowNum = sheet.getLastRowNum() + 2;
         Row headerRow = sheet.createRow(rowNum++);
-        headerRow.createCell(0).setCellValue("Daily Summary");
-        headerRow.createCell(1).setCellValue("Branch");
-        headerRow.createCell(2).setCellValue("Time Spent");
-        headerRow.createCell(3).setCellValue("Percentage of Day");
+        headerRow.createCell(0).setCellValue(Dictionary.translate("dailySummary"));
+        headerRow.createCell(1).setCellValue(Dictionary.translate("branch"));
+        headerRow.createCell(2).setCellValue(Dictionary.translate("timeSpent"));
+        headerRow.createCell(3).setCellValue(Dictionary.translate("percentageOfDay"));
 
         for (Map.Entry<LocalDate, Map<String, Duration>> entry : dailyBranchTime.entrySet()) {
             LocalDate date = entry.getKey();
@@ -113,9 +113,9 @@ public final class ExportService {
 
         rowNum += 2;
         Row weeklySummaryHeader = sheet.createRow(rowNum++);
-        weeklySummaryHeader.createCell(0).setCellValue("Weekly Summary");
-        weeklySummaryHeader.createCell(1).setCellValue("Branch");
-        weeklySummaryHeader.createCell(2).setCellValue("Total Time Spent");
+        weeklySummaryHeader.createCell(0).setCellValue(Dictionary.translate("weeklySummary"));
+        weeklySummaryHeader.createCell(1).setCellValue(Dictionary.translate("branch"));
+        weeklySummaryHeader.createCell(2).setCellValue(Dictionary.translate("totalTimeSpent"));
 
         for (Map.Entry<String, Duration> branchEntry : weeklyBranchTime.entrySet()) {
             String branch = branchEntry.getKey();

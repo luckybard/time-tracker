@@ -7,6 +7,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class TimeTrackerToolWindowFactory implements ToolWindowFactory, DumbAware {
@@ -15,7 +16,7 @@ public class TimeTrackerToolWindowFactory implements ToolWindowFactory, DumbAwar
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         TimeTrackerPanel panel = new TimeTrackerPanel(project);
         ContentFactory contentFactory = ContentFactory.getInstance();
-        Content content = contentFactory.createContent(panel.getContent(), "", false);
+        Content content = contentFactory.createContent(panel.getContent(), StringUtils.EMPTY, false);
         toolWindow.getContentManager().addContent(content);
     }
 

@@ -4,17 +4,20 @@ import com.intellij.openapi.components.Service;
 
 import javax.swing.*;
 
+import static com.github.luckybard.timetracker.util.Dictionary.translate;
+
 @Service(Service.Level.PROJECT)
 public final class ComponentsController {
-    private final JLabel branchLabel = new JLabel("Branch:");
-    private final JLabel nameLabel = new JLabel("Name:");
-    private final JLabel elapsedTimeLabel = new JLabel("Time:");
-    private final JButton stopTrackingButton = new JButton("Stop tracking");
-    private final JButton startTrackingButton = new JButton("Start tracking");
-    private final JButton editCurrentSessionButton = new JButton("Edit");
-    private final JButton clearHistoryButton = new JButton("Clear all history");
-    private final JButton globalSettingsButton = new JButton("Settings");
-    private final JButton exportButton = new JButton("Export");
+
+    private final JLabel branchLabel = new JLabel(translate("branch"));
+    private final JLabel nameLabel = new JLabel(translate("name"));
+    private final JLabel elapsedTimeLabel = new JLabel(translate("time"));
+    private final JButton stopTrackingButton = new JButton(translate("tracking.stop"));
+    private final JButton startTrackingButton = new JButton(translate("tracking.start"));
+    private final JButton editCurrentSessionButton = new JButton(translate("edit"));
+    private final JButton clearHistoryButton = new JButton(translate("session.all.clear"));
+    private final JButton globalSettingsButton = new JButton(translate("settings"));
+    private final JButton exportButton = new JButton(translate("export"));
 
     public JLabel getBranchLabel() {
         return branchLabel;

@@ -2,6 +2,7 @@ package com.github.luckybard.timetracker.ui.table;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.table.JBTable;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -25,7 +26,7 @@ public abstract class ColumnButtonEditor extends DefaultCellEditor {
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        this.label = (value == null) ? "" : value.toString();
+        this.label = (value == null) ? StringUtils.EMPTY : value.toString();
         this.isClicked = true;
 
         return button;

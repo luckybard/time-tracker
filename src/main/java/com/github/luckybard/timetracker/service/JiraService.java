@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Base64;
 
+import static com.github.luckybard.timetracker.util.Dictionary.translate;
 import static com.github.luckybard.timetracker.util.TimeUtils.getDurationAsString;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
 import static org.apache.commons.lang3.StringUtils.SPACE;
@@ -47,7 +48,7 @@ public final class JiraService {
         try {
             return updateIssueTime(issueKey, timeSpent) && addCommentToIssue(issueKey, comment);
         } catch (IOException e) {
-            System.err.println("Error while updating Jira: " + e.getMessage());
+            logger.error("Error while updating Jira: {}", e.getMessage());
             return false;
         }
     }
@@ -99,14 +100,14 @@ public final class JiraService {
     }
 
     private String generateComment(Session session, String timeSpent) {
-        String comment = String.format("Session started at %s, ended at %s, duration: %s",
+        String comment = String.format(translate("jira.comment.time"),
                 session.getStartTime(), session.getEndTime(), timeSpent);
 
         if (StringUtils.isNotBlank(session.getName()) && isFalse(session.getName().equals(session.getBranch()))) {
-            comment = comment + SPACE + String.format("named: %s ", session.getName());
+            comment = comment + SPACE + String.format(translate("jira.comment.name"), session.getName());
         }
         if (StringUtils.isNotBlank(session.getDescription())) {
-            comment = comment + SPACE + String.format("with description: %s ", session.getDescription());
+            comment = comment + SPACE + String.format(translate("jira.comment.description"), session.getDescription());
         }
 
         return comment;

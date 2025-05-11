@@ -1,7 +1,6 @@
 package com.github.luckybard.timetracker.action;
 
 import com.github.luckybard.timetracker.controller.TrackerController;
-import com.github.luckybard.timetracker.listener.ProjectCloseListener;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.NotNull;

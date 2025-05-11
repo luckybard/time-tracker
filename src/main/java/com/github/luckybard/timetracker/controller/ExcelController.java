@@ -4,12 +4,13 @@ import com.esotericsoftware.kryo.kryo5.util.Null;
 import com.github.luckybard.timetracker.service.ExportService;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+
+import static com.github.luckybard.timetracker.util.Dictionary.COLON_WITH_SPACE;
+import static com.github.luckybard.timetracker.util.Dictionary.translate;
 
 @Service(Service.Level.PROJECT)
 public final class ExcelController {
@@ -25,16 +26,16 @@ public final class ExcelController {
         if (file != null) {
             try {
                 exportService.prepareFIle(file);
-                showMessage("Export completed successfully!");
+                showMessage(translate("excel.file.export.success"));
             } catch (IOException ex) {
-                showError("Error during export: " + ex.getMessage());
+                showError(translate("excel.export.error") + COLON_WITH_SPACE + ex.getMessage());
             }
         }
     }
 
     private File promptUserForFile() {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Save Excel File");
+        fileChooser.setDialogTitle("save.excel.file");
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Excel Files", "xlsx"));
         int userSelection = fileChooser.showSaveDialog(null);
 
@@ -53,6 +54,6 @@ public final class ExcelController {
     }
 
     private void showError(String message) {
-        JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, message, translate("error"), JOptionPane.ERROR_MESSAGE);
     }
 }

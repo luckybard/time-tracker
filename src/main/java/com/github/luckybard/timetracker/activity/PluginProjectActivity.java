@@ -2,7 +2,6 @@ package com.github.luckybard.timetracker.activity;
 
 import com.github.luckybard.timetracker.controller.TrackerController;
 import com.github.luckybard.timetracker.listener.BranchChangeListener;
-import com.github.luckybard.timetracker.listener.ProjectCloseListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.ProjectActivity;
 import com.intellij.util.messages.MessageBusConnection;

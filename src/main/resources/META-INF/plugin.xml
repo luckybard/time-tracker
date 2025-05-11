@@ -7,7 +7,7 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>Git4Idea</depends>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
+    <resource-bundle>dict.dictionary</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Time Tracker" icon="AllIcons.Toolwindows.ToolWindowDebugger"

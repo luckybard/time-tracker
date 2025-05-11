@@ -4,10 +4,10 @@ import com.github.luckybard.timetracker.storage.SessionStorage;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+
+import static com.github.luckybard.timetracker.util.Dictionary.translate;
 
 @Service(Service.Level.PROJECT)
 public final class SessionController {
@@ -19,11 +19,11 @@ public final class SessionController {
     }
 
     public void clearSessions() {
-        int confirm = JOptionPane.showConfirmDialog(null, "Are you sure about clearing whole history?",
-                "Clear session history", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(null, translate("session.history.clear.confirm"),
+                "session.history.clear.title", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             state.sessions.clear();
-            JOptionPane.showMessageDialog(null, "History has been cleared.");
+            JOptionPane.showMessageDialog(null, translate("session.history.cleared"));
         }
     }
 }

@@ -10,6 +10,8 @@ import java.awt.*;
 import java.time.Duration;
 import java.time.Instant;
 
+import static com.github.luckybard.timetracker.util.Dictionary.COLON_WITH_SPACE;
+import static com.github.luckybard.timetracker.util.Dictionary.translate;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -102,19 +104,19 @@ public class TimeTrackerPanel {
 
     private void updateNavigationPanelUI() {
         String name = trackerController.getName();
-        componentsController.getNameLabel().setText("Name: " + (isNotBlank(name) ? name : EMPTY));
+        componentsController.getNameLabel().setText(translate("name") + COLON_WITH_SPACE + (isNotBlank(name) ? name : EMPTY));
         String currentBranch = trackerController.getBranch();
-        componentsController.getBranchLabel().setText("Session: " + (isNotBlank(currentBranch) ? currentBranch : EMPTY));
+        componentsController.getBranchLabel().setText(translate("session") + COLON_WITH_SPACE + (isNotBlank(currentBranch) ? currentBranch : EMPTY));
 
         Instant startTime = trackerController.getStartTime();
         if (startTime != null) {
             componentsController.getStartTrackingButton().setEnabled(false);
             componentsController.getStopTrackingButton().setEnabled(true);
             Duration elapsed = Duration.between(startTime, Instant.now());
-            componentsController.getElapsedTimeLabel().setText(String.format("Time: %02d:%02d:%02d",
-                    elapsed.toHours(), elapsed.toMinutesPart(), elapsed.toSecondsPart()));
+            componentsController.getElapsedTimeLabel().setText(translate("time") + COLON_WITH_SPACE +
+                    String.format("%02d:%02d:%02d", elapsed.toHours(), elapsed.toMinutesPart(), elapsed.toSecondsPart()));
         } else {
-            componentsController.getElapsedTimeLabel().setText("Time:");
+            componentsController.getElapsedTimeLabel().setText(translate("time") + COLON_WITH_SPACE);
         }
     }
 

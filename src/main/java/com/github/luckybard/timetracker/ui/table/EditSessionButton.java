@@ -9,6 +9,7 @@ import com.intellij.ui.components.JBScrollPane;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.github.luckybard.timetracker.util.Dictionary.translate;
 import static com.github.luckybard.timetracker.util.TimeUtils.isEndTimeBeforeStartTime;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -17,7 +18,7 @@ public class EditSessionButton extends ColumnButtonEditor {
     private final SessionService sessionService;
 
     public EditSessionButton(Project project) {
-        super(project, new JCheckBox(), "Edit");
+        super(project, new JCheckBox(), translate("edit"));
         this.sessionService = project.getService(SessionService.class);
     }
 
@@ -47,19 +48,19 @@ public class EditSessionButton extends ColumnButtonEditor {
             descriptionScrollPane.setPreferredSize(new Dimension(300, 150));
 
             JPanel fieldsPanel = new JPanel(new GridLayout(5, 2, 5, 5));
-            fieldsPanel.add(new JLabel("Branch:"));
+            fieldsPanel.add(new JLabel(translate("branch")));
             fieldsPanel.add(branchField);
-            fieldsPanel.add(new JLabel("Name:"));
+            fieldsPanel.add(new JLabel(translate("name")));
             fieldsPanel.add(nameField);
-            fieldsPanel.add(new JLabel("Date (yyyy-MM-dd):"));
+            fieldsPanel.add(new JLabel(translate("date.format.label")));
             fieldsPanel.add(dateField);
-            fieldsPanel.add(new JLabel("Start Time (HH:mm):"));
+            fieldsPanel.add(new JLabel(translate("start.time.format.label")));
             fieldsPanel.add(startTimeField);
-            fieldsPanel.add(new JLabel("End Time (HH:mm):"));
+            fieldsPanel.add(new JLabel(translate("end.time.format.label")));
             fieldsPanel.add(endTimeField);
 
             JPanel descriptionPanel = new JPanel(new BorderLayout(5, 5));
-            descriptionPanel.add(new JLabel("Description:"), BorderLayout.NORTH);
+            descriptionPanel.add(new JLabel(translate("description")), BorderLayout.NORTH);
             descriptionPanel.add(descriptionScrollPane, BorderLayout.CENTER);
 
             JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
@@ -67,7 +68,7 @@ public class EditSessionButton extends ColumnButtonEditor {
             mainPanel.add(fieldsPanel, BorderLayout.NORTH);
             mainPanel.add(descriptionPanel, BorderLayout.CENTER);
 
-            int result = JOptionPane.showConfirmDialog(null, mainPanel, "Edit Session", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int result = JOptionPane.showConfirmDialog(null, mainPanel, translate("edit.session"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
             if (result == JOptionPane.OK_OPTION) {
                 boolean shouldSave = true;
@@ -80,25 +81,25 @@ public class EditSessionButton extends ColumnButtonEditor {
 
                 if (isEmpty(branch) || isEmpty(date) || isEmpty(startTime) || isEmpty(endTime)) {
                     shouldSave = false;
-                    JOptionPane.showMessageDialog(null, "All fields must be filled out.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, translate("error.validation.fields"), translate("error.input.title"), JOptionPane.ERROR_MESSAGE);
                     this.handleButtonClick(row);
                 }
 
                 if (!TimeUtils.isValidDate(date)) {
                     shouldSave = false;
-                    JOptionPane.showMessageDialog(null, "Invalid date format. Please use yyyy-MM-dd.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, translate("error.session.date.format"), translate("error.input.title"), JOptionPane.ERROR_MESSAGE);
                     this.handleButtonClick(row);
                 }
 
                 if (!TimeUtils.isValidTime(startTime) || !TimeUtils.isValidTime(endTime)) {
                     shouldSave = false;
-                    JOptionPane.showMessageDialog(null, "Invalid time format. Please use HH:mm.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, translate("error.session.time.format"), translate("error.input.title"), JOptionPane.ERROR_MESSAGE);
                     this.handleButtonClick(row);
                 }
 
                 if (isEndTimeBeforeStartTime(startTime, endTime)) {
                     shouldSave = false;
-                    JOptionPane.showMessageDialog(null, "Invalid time. End time cannot be before start time", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "error.session.time.end", translate("error.input.title"), JOptionPane.ERROR_MESSAGE);
                     this.handleButtonClick(row);
                 }
 

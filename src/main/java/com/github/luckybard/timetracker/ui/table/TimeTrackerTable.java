@@ -6,17 +6,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.time.Duration;
 import java.util.List;
 
-public class TimeTrackerTable {
+import static com.github.luckybard.timetracker.util.Dictionary.translate;
 
-    private static final Logger logger = LoggerFactory.getLogger(TimeTrackerTable.class);
+public class TimeTrackerTable {
 
     private final JBTable table;
     private final DefaultTableModel tableModel;
@@ -25,16 +23,16 @@ public class TimeTrackerTable {
     public TimeTrackerTable(@NotNull Project project) {
         this.sessionService = project.getService(SessionService.class);
         this.tableModel = new DefaultTableModel(new String[]{
-                "ID",
-                "Branch",
-                "Name",
-                "Date",
-                "Start Time",
-                "End Time",
-                "Duration",
-                "Send to Jira",
-                "Edit Session",
-                "Delete Session"
+                translate("id"),
+                translate("branch"),
+                translate("name"),
+                translate("date"),
+                translate("start time"),
+                translate("end time"),
+                translate("duration"),
+                translate("sendToJira"),
+                translate("edit.session"),
+                translate("delete.session"),
         }, 0);
         this.table = new JBTable(tableModel);
 
@@ -66,9 +64,9 @@ public class TimeTrackerTable {
                         session.getStartTime(),
                         session.getEndTime(),
                         formatDuration(session.getDuration()),
-                        session.isSentToJira() ? "Sent" : "Send",
-                        session.isSentToJira() ? "Already sent" : "Edit",
-                        "Delete"
+                        session.isSentToJira() ? translate("sent") : translate("send"),
+                        session.isSentToJira() ? translate("alreadySent") : translate("edit"),
+                        translate("delete")
                 });
             }
 
@@ -83,14 +81,14 @@ public class TimeTrackerTable {
     }
 
     private void initializeButtons(@NotNull Project project) {
-        table.getColumn("Send to Jira").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Send to Jira").setCellEditor(new SendToJiraButton(project));
+        table.getColumn("sendToJira").setCellRenderer(new ButtonRenderer());
+        table.getColumn("sendToJira").setCellEditor(new SendToJiraButton(project));
 
-        table.getColumn("Edit Session").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Edit Session").setCellEditor(new EditSessionButton(project));
+        table.getColumn("edit.session").setCellRenderer(new ButtonRenderer());
+        table.getColumn("edit.session").setCellEditor(new EditSessionButton(project));
 
-        table.getColumn("Delete Session").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Delete Session").setCellEditor(new DeleteSessionButton(project, tableModel));
+        table.getColumn("delete.session").setCellRenderer(new ButtonRenderer());
+        table.getColumn("delete.session").setCellEditor(new DeleteSessionButton(project, tableModel));
     }
 
     private String formatDuration(Duration duration) {

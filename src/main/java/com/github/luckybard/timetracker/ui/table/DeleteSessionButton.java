@@ -7,12 +7,14 @@ import com.intellij.openapi.project.Project;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import static com.github.luckybard.timetracker.util.Dictionary.translate;
+
 public class DeleteSessionButton extends ColumnButtonEditor {
     private final DefaultTableModel tableModel;
     private final SessionService sessionService;
 
     public DeleteSessionButton(Project project, DefaultTableModel tableModel) {
-        super(project, new JCheckBox(), "Delete");
+        super(project, new JCheckBox(), translate("delete"));
         this.tableModel = tableModel;
         this.sessionService = project.getService(SessionService.class);
     }
@@ -25,7 +27,7 @@ public class DeleteSessionButton extends ColumnButtonEditor {
         Session session = sessionService.getSessionById(sessionId);
 
         if (session != null) {
-            if (confirmAction("Are you sure about deleting this session?", "Delete")) {
+            if (confirmAction(translate("delete.confirm.action.msg"), translate("delete"))) {
                 sessionService.removeSession(session);
             }
         }
