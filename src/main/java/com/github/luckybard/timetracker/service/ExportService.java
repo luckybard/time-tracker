@@ -88,10 +88,10 @@ public final class ExportService {
                                Map<LocalDate, Duration> dailyTotalTime, Map<String, Duration> weeklyBranchTime) {
         int rowNum = sheet.getLastRowNum() + 2;
         Row headerRow = sheet.createRow(rowNum++);
-        headerRow.createCell(0).setCellValue(Dictionary.translate("dailySummary"));
+        headerRow.createCell(0).setCellValue(Dictionary.translate("excel.daily.summary"));
         headerRow.createCell(1).setCellValue(Dictionary.translate("branch"));
-        headerRow.createCell(2).setCellValue(Dictionary.translate("timeSpent"));
-        headerRow.createCell(3).setCellValue(Dictionary.translate("percentageOfDay"));
+        headerRow.createCell(2).setCellValue(Dictionary.translate("excel.time.spent"));
+        headerRow.createCell(3).setCellValue(Dictionary.translate("excel.percentage.of.day"));
 
         for (Map.Entry<LocalDate, Map<String, Duration>> entry : dailyBranchTime.entrySet()) {
             LocalDate date = entry.getKey();
@@ -113,9 +113,9 @@ public final class ExportService {
 
         rowNum += 2;
         Row weeklySummaryHeader = sheet.createRow(rowNum++);
-        weeklySummaryHeader.createCell(0).setCellValue(Dictionary.translate("weeklySummary"));
+        weeklySummaryHeader.createCell(0).setCellValue(Dictionary.translate("excel.weekly.summary"));
         weeklySummaryHeader.createCell(1).setCellValue(Dictionary.translate("branch"));
-        weeklySummaryHeader.createCell(2).setCellValue(Dictionary.translate("totalTimeSpent"));
+        weeklySummaryHeader.createCell(2).setCellValue(Dictionary.translate("excel.total.time.spent"));
 
         for (Map.Entry<String, Duration> branchEntry : weeklyBranchTime.entrySet()) {
             String branch = branchEntry.getKey();

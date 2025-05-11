@@ -29,7 +29,7 @@ public class SendToJiraButton extends ColumnButtonEditor {
             if (success) {
                 session.setSentToJira(true);
             } else {
-                JOptionPane.showMessageDialog(null, translate("error.jira.request"));
+                JOptionPane.showMessageDialog(null, translate("jira.error.request"));
             }
         }
     }

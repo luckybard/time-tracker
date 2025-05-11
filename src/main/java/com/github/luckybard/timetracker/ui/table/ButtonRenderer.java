@@ -15,7 +15,7 @@ public class ButtonRenderer extends JButton implements TableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         setText((value == null) ? StringUtils.EMPTY : value.toString());
-        setEnabled(value == null || (!value.equals(Dictionary.translate("sent")) && !value.equals(Dictionary.translate("alreadySent"))));
+        setEnabled(value == null || (!value.equals(Dictionary.translate("sent")) && !value.equals(Dictionary.translate("jira.session.already.sent"))));
         return this;
     }
 }

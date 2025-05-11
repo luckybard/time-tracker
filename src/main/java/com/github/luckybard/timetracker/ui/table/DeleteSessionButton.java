@@ -27,7 +27,7 @@ public class DeleteSessionButton extends ColumnButtonEditor {
         Session session = sessionService.getSessionById(sessionId);
 
         if (session != null) {
-            if (confirmAction(translate("delete.confirm.action.msg"), translate("delete"))) {
+            if (confirmAction(translate("session.delete.confirm"), translate("delete"))) {
                 sessionService.removeSession(session);
             }
         }

@@ -54,7 +54,7 @@ public final class JiraService {
     }
 
     private boolean updateIssueTime(String issueKey, String timeSpent) throws IOException {
-        String jsonBody = createJsonBody("timeSpent", timeSpent);
+        String jsonBody = createJsonBody("excel.time.spent", timeSpent);
         Request request = buildRequest(issueKey, WORKLOG_ENDPOINT, jsonBody);
 
         return executeRequest(request);

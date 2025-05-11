@@ -64,7 +64,7 @@ public final class TrackerController {
         mainPanel.add(fieldsPanel, BorderLayout.NORTH);
         mainPanel.add(descriptionPanel, BorderLayout.CENTER);
 
-        int result = JOptionPane.showConfirmDialog(null, mainPanel, translate("edit.session"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(null, mainPanel, translate("session.edit"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
             trackingService.setName(nameField.getText());

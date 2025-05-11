@@ -30,9 +30,9 @@ public class TimeTrackerTable {
                 translate("start time"),
                 translate("end time"),
                 translate("duration"),
-                translate("sendToJira"),
-                translate("edit.session"),
-                translate("delete.session"),
+                translate("jira.send"),
+                translate("session.edit"),
+                translate("session.delete"),
         }, 0);
         this.table = new JBTable(tableModel);
 
@@ -65,7 +65,7 @@ public class TimeTrackerTable {
                         session.getEndTime(),
                         formatDuration(session.getDuration()),
                         session.isSentToJira() ? translate("sent") : translate("send"),
-                        session.isSentToJira() ? translate("alreadySent") : translate("edit"),
+                        session.isSentToJira() ? translate("jira.session.already.sent") : translate("edit"),
                         translate("delete")
                 });
             }
@@ -81,14 +81,14 @@ public class TimeTrackerTable {
     }
 
     private void initializeButtons(@NotNull Project project) {
-        table.getColumn("sendToJira").setCellRenderer(new ButtonRenderer());
-        table.getColumn("sendToJira").setCellEditor(new SendToJiraButton(project));
+        table.getColumn("jira.send").setCellRenderer(new ButtonRenderer());
+        table.getColumn("jira.send").setCellEditor(new SendToJiraButton(project));
 
-        table.getColumn("edit.session").setCellRenderer(new ButtonRenderer());
-        table.getColumn("edit.session").setCellEditor(new EditSessionButton(project));
+        table.getColumn("session.edit").setCellRenderer(new ButtonRenderer());
+        table.getColumn("session.edit").setCellEditor(new EditSessionButton(project));
 
-        table.getColumn("delete.session").setCellRenderer(new ButtonRenderer());
-        table.getColumn("delete.session").setCellEditor(new DeleteSessionButton(project, tableModel));
+        table.getColumn("session.delete").setCellRenderer(new ButtonRenderer());
+        table.getColumn("session.delete").setCellEditor(new DeleteSessionButton(project, tableModel));
     }
 
     private String formatDuration(Duration duration) {

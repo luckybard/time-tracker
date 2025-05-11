@@ -52,11 +52,11 @@ public class EditSessionButton extends ColumnButtonEditor {
             fieldsPanel.add(branchField);
             fieldsPanel.add(new JLabel(translate("name")));
             fieldsPanel.add(nameField);
-            fieldsPanel.add(new JLabel(translate("date.format.label")));
+            fieldsPanel.add(new JLabel(translate("date.format")));
             fieldsPanel.add(dateField);
-            fieldsPanel.add(new JLabel(translate("start.time.format.label")));
+            fieldsPanel.add(new JLabel(translate("start.time.format")));
             fieldsPanel.add(startTimeField);
-            fieldsPanel.add(new JLabel(translate("end.time.format.label")));
+            fieldsPanel.add(new JLabel(translate("end.time.format")));
             fieldsPanel.add(endTimeField);
 
             JPanel descriptionPanel = new JPanel(new BorderLayout(5, 5));
@@ -68,7 +68,7 @@ public class EditSessionButton extends ColumnButtonEditor {
             mainPanel.add(fieldsPanel, BorderLayout.NORTH);
             mainPanel.add(descriptionPanel, BorderLayout.CENTER);
 
-            int result = JOptionPane.showConfirmDialog(null, mainPanel, translate("edit.session"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int result = JOptionPane.showConfirmDialog(null, mainPanel, translate("session.edit"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
             if (result == JOptionPane.OK_OPTION) {
                 boolean shouldSave = true;
@@ -81,25 +81,25 @@ public class EditSessionButton extends ColumnButtonEditor {
 
                 if (isEmpty(branch) || isEmpty(date) || isEmpty(startTime) || isEmpty(endTime)) {
                     shouldSave = false;
-                    JOptionPane.showMessageDialog(null, translate("error.validation.fields"), translate("error.input.title"), JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, translate("session.error.fields"), translate("error.input.title"), JOptionPane.ERROR_MESSAGE);
                     this.handleButtonClick(row);
                 }
 
                 if (!TimeUtils.isValidDate(date)) {
                     shouldSave = false;
-                    JOptionPane.showMessageDialog(null, translate("error.session.date.format"), translate("error.input.title"), JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, translate("session.error.date.format"), translate("error.input.title"), JOptionPane.ERROR_MESSAGE);
                     this.handleButtonClick(row);
                 }
 
                 if (!TimeUtils.isValidTime(startTime) || !TimeUtils.isValidTime(endTime)) {
                     shouldSave = false;
-                    JOptionPane.showMessageDialog(null, translate("error.session.time.format"), translate("error.input.title"), JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, translate("session.error.time.format"), translate("error.input.title"), JOptionPane.ERROR_MESSAGE);
                     this.handleButtonClick(row);
                 }
 
                 if (isEndTimeBeforeStartTime(startTime, endTime)) {
                     shouldSave = false;
-                    JOptionPane.showMessageDialog(null, "error.session.time.end", translate("error.input.title"), JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "session.error.time.end", translate("error.input.title"), JOptionPane.ERROR_MESSAGE);
                     this.handleButtonClick(row);
                 }
 
