@@ -106,7 +106,7 @@ public class TimeTrackerPanel {
         String name = trackerController.getName();
         componentsController.getNameLabel().setText(translate("name") + COLON_WITH_SPACE + (isNotBlank(name) ? name : EMPTY));
         String currentBranch = trackerController.getBranch();
-        componentsController.getBranchLabel().setText(translate("session") + COLON_WITH_SPACE + (isNotBlank(currentBranch) ? currentBranch : EMPTY));
+        componentsController.getBranchLabel().setText(translate("branch") + COLON_WITH_SPACE + (isNotBlank(currentBranch) ? currentBranch : EMPTY));
 
         Instant startTime = trackerController.getStartTime();
         if (startTime != null) {

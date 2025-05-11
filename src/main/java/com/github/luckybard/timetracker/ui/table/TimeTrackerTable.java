@@ -27,12 +27,12 @@ public class TimeTrackerTable {
                 translate("branch"),
                 translate("name"),
                 translate("date"),
-                translate("start time"),
-                translate("end time"),
+                translate("start.time"),
+                translate("end.time"),
                 translate("duration"),
                 translate("jira.send"),
-                translate("session.edit"),
-                translate("session.delete"),
+                translate("edit"),
+                translate("delete"),
         }, 0);
         this.table = new JBTable(tableModel);
 
@@ -81,14 +81,14 @@ public class TimeTrackerTable {
     }
 
     private void initializeButtons(@NotNull Project project) {
-        table.getColumn("jira.send").setCellRenderer(new ButtonRenderer());
-        table.getColumn("jira.send").setCellEditor(new SendToJiraButton(project));
+        table.getColumn(translate("jira.send")).setCellRenderer(new ButtonRenderer());
+        table.getColumn(translate("jira.send")).setCellEditor(new SendToJiraButton(project));
 
-        table.getColumn("session.edit").setCellRenderer(new ButtonRenderer());
-        table.getColumn("session.edit").setCellEditor(new EditSessionButton(project));
+        table.getColumn(translate("edit")).setCellRenderer(new ButtonRenderer());
+        table.getColumn(translate("edit")).setCellEditor(new EditSessionButton(project));
 
-        table.getColumn("session.delete").setCellRenderer(new ButtonRenderer());
-        table.getColumn("session.delete").setCellEditor(new DeleteSessionButton(project, tableModel));
+        table.getColumn(translate("delete")).setCellRenderer(new ButtonRenderer());
+        table.getColumn(translate("delete")).setCellEditor(new DeleteSessionButton(project, tableModel));
     }
 
     private String formatDuration(Duration duration) {
