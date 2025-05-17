@@ -78,14 +78,15 @@ public final class TrackingService {
     }
 
     private Session createSession() {
-        return new Session()
-                .setId(UUID.randomUUID().toString())
-                .setBranch(branch)
-                .setName(name)
-                .setStartTime(InstantFormatter.formatTime(startTime))
-                .setEndTime(InstantFormatter.formatTime(Instant.now()))
-                .setDate(InstantFormatter.formatDate(Instant.now()))
-                .setSentToJira(false);
+        Session session = new Session();
+        session.setId(UUID.randomUUID().toString());
+        session.setBranch(branch);
+        session.setName(name);
+        session.setStartTime(InstantFormatter.formatTime(startTime));
+        session.setEndTime(InstantFormatter.formatTime(Instant.now()));
+        session.setDate(InstantFormatter.formatDate(Instant.now()));
+        session.setSentToJira(false);
+        return session;
     }
 
     private boolean isBranchValid() {
