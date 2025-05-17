@@ -26,9 +26,10 @@ public final class ExcelController {
         if (file != null) {
             try {
                 exportService.prepareFIle(file);
-                showMessage(translate("excel.file.export.success"));
+                JOptionPane.showMessageDialog(null, translate("excel.file.export.success"));
             } catch (IOException ex) {
-                showError(translate("excel.export.error") + COLON_WITH_SPACE + ex.getMessage());
+                JOptionPane.showMessageDialog(null, translate("excel.export.error") +
+                        COLON_WITH_SPACE + ex.getMessage(), translate("error"), JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -47,13 +48,5 @@ public final class ExcelController {
             return file;
         }
         return null;
-    }
-
-    private void showMessage(String message) {
-        JOptionPane.showMessageDialog(null, message);
-    }
-
-    private void showError(String message) {
-        JOptionPane.showMessageDialog(null, message, translate("error"), JOptionPane.ERROR_MESSAGE);
     }
 }

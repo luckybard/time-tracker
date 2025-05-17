@@ -10,16 +10,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.time.Instant;
 
+import static com.github.luckybard.timetracker.ui.ComponentsProvider.*;
 import static com.github.luckybard.timetracker.util.Dictionary.translate;
 
 @Service(Service.Level.PROJECT)
 public final class TrackerController {
-
-    private final ComponentsController componentsController;
+    
     private final TrackingService trackingService;
 
     public TrackerController(@NotNull Project project) {
-        this.componentsController = project.getService(ComponentsController.class);
         this.trackingService = project.getService(TrackingService.class);
     }
 
@@ -74,16 +73,16 @@ public final class TrackerController {
 
     public void startTracking() {
         trackingService.startTimer();
-        componentsController.getStartTrackingButton().setEnabled(false);
-        componentsController.getStopTrackingButton().setEnabled(true);
-        componentsController.getEditCurrentSessionButton().setEnabled(true);
+        getStartTrackingButton().setEnabled(false);
+        getStopTrackingButton().setEnabled(true);
+        getEditCurrentSessionButton().setEnabled(true);
     }
 
     public void stopTracking() {
         trackingService.stopTimer();
-        componentsController.getStartTrackingButton().setEnabled(true);
-        componentsController.getStopTrackingButton().setEnabled(false);
-        componentsController.getEditCurrentSessionButton().setEnabled(false);
+        getStartTrackingButton().setEnabled(true);
+        getStopTrackingButton().setEnabled(false);
+        getEditCurrentSessionButton().setEnabled(false);
         JOptionPane.showMessageDialog(null, translate("tracking.session.stopped"));
     }
 }
