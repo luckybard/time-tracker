@@ -64,9 +64,9 @@ public final class TrackingService {
     public void startTimer() {
         logger.info("TrackingService::startTimer()");
         String currentBranch = gitService.fetchCurrentBranch();
-        branch = currentBranch;
-        name = currentBranch;
-        startTime = Instant.now();
+        setBranch(currentBranch);
+        setName(currentBranch);
+        setStartTime(Instant.now());
     }
 
     public void stopTimer() {
@@ -94,8 +94,8 @@ public final class TrackingService {
     }
 
     private void resetTimer() {
-        name = null;
-        branch = null;
-        startTime = null;
+        setBranch(null);
+        setName(null);
+        setStartTime(null);
     }
 }

@@ -43,6 +43,4 @@ public final class PropertiesController {
             service.updateConfiguration(url.getText(), token.getText(), username.getText(), projectKey.getText());
         }
     }
-
-
 }
