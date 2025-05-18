@@ -1,4 +1,4 @@
-package com.github.luckybard.timetracker.ui.table;
+package com.github.luckybard.timetracker.ui.table.button;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.table.JBTable;

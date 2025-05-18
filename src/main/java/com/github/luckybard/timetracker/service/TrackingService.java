@@ -33,7 +33,7 @@ public final class TrackingService {
         return description;
     }
 
-    public void setDescription(String description) {
+    private void setDescription(String description) {
         this.description = description;
     }
 
@@ -41,7 +41,7 @@ public final class TrackingService {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -49,7 +49,7 @@ public final class TrackingService {
         return branch;
     }
 
-    public void setBranch(String branch) {
+    private void setBranch(String branch) {
         this.branch = branch;
     }
 
@@ -57,7 +57,7 @@ public final class TrackingService {
         return startTime;
     }
 
-    public void setStartTime(Instant startTime) {
+    private void setStartTime(Instant startTime) {
         this.startTime = startTime;
     }
 
@@ -75,6 +75,12 @@ public final class TrackingService {
             sessionService.saveSession(createSession());
         }
         resetTimer();
+    }
+
+    public void editCurrentSession(String name, String description) {
+        logger.info("TrackingService::editCurrentSession()");
+        setBranch(name);
+        setDescription(description);
     }
 
     private Session createSession() {

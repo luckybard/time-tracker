@@ -1,7 +1,7 @@
-package com.github.luckybard.timetracker.ui;
+package com.github.luckybard.timetracker.ui.panel;
 
 import com.github.luckybard.timetracker.controller.*;
-import com.github.luckybard.timetracker.ui.table.TimeTrackerTable;
+import com.github.luckybard.timetracker.ui.table.TrackerTable;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,32 +11,37 @@ import java.time.Duration;
 import java.time.Instant;
 
 import static com.github.luckybard.timetracker.ui.ComponentsProvider.*;
+import static com.github.luckybard.timetracker.ui.panel.NavigationPanel.prepareNavigationPanel;
 import static com.github.luckybard.timetracker.util.Dictionary.COLON_WITH_SPACE;
 import static com.github.luckybard.timetracker.util.Dictionary.translate;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-public class TimeTrackerPanel {
+public class MainPanel {
 
     private final JPanel panel;
-    private final TimeTrackerTable sessionTable;
+    private final TrackerTable sessionTable;
 
     private final ExcelController excelController;
     private final TrackerController trackerController;
     private final SessionController sessionController;
     private final PropertiesController propertiesController;
 
-    public TimeTrackerPanel(@NotNull Project project) {
+    public MainPanel(@NotNull Project project) {
         this.excelController = project.getService(ExcelController.class);
         this.trackerController = project.getService(TrackerController.class);
         this.sessionController = project.getService(SessionController.class);
         this.propertiesController = project.getService(PropertiesController.class);
-        this.sessionTable = new TimeTrackerTable(project);
+        this.sessionTable = new TrackerTable(project);
         this.panel = new JPanel(new BorderLayout());
 
         initializePanel();
         addButtonsListener();
         initializeUIUpdater(project);
+    }
+
+    public JPanel getContent() {
+        return panel;
     }
 
     private void initializePanel() {
@@ -46,35 +51,6 @@ public class TimeTrackerPanel {
 
     private JScrollPane prepareSessionTablePanel() {
         return sessionTable.getTableScrollPane();
-    }
-
-    private JPanel prepareNavigationPanel() {
-        JPanel trackingButtons = prepareTrackingButtons();
-        JPanel settingsButtons = prepareSettingsButtons();
-
-        JPanel navigationPanel = new JPanel(new GridLayout(5, 1));
-        navigationPanel.add(getNameLabel());
-        navigationPanel.add(getBranchLabel());
-        navigationPanel.add(getElapsedTimeLabel());
-        navigationPanel.add(trackingButtons, BorderLayout.AFTER_LAST_LINE);
-        navigationPanel.add(settingsButtons, BorderLayout.AFTER_LAST_LINE);
-        return navigationPanel;
-    }
-
-    private JPanel prepareSettingsButtons() {
-        JPanel settingsButtons = new JPanel(new GridLayout(1, 4));
-        settingsButtons.add(getClearHistoryButton());
-        settingsButtons.add(getGlobalSettingsButton());
-        settingsButtons.add(getEditCurrentSessionButton());
-        settingsButtons.add(getExportButton());
-        return settingsButtons;
-    }
-
-    private JPanel prepareTrackingButtons() {
-        JPanel trackingButtons = new JPanel(new GridLayout(1, 2));
-        trackingButtons.add(getStartTrackingButton());
-        trackingButtons.add(getStopTrackingButton());
-        return trackingButtons;
     }
 
     private void initializeUIUpdater(Project project) {
@@ -123,9 +99,5 @@ public class TimeTrackerPanel {
         if (getStartTrackingButton().isEnabled() && getStopTrackingButton().isEnabled()) {
             trackerController.startTracking();
         }
-    }
-
-    public JPanel getContent() {
-        return panel;
     }
 }

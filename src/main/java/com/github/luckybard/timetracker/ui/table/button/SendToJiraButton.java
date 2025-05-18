@@ -1,4 +1,4 @@
-package com.github.luckybard.timetracker.ui.table;
+package com.github.luckybard.timetracker.ui.table.button;
 
 import com.github.luckybard.timetracker.model.Session;
 import com.github.luckybard.timetracker.service.JiraService;

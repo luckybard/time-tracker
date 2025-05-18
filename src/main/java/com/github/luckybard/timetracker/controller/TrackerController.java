@@ -15,15 +15,11 @@ import static com.github.luckybard.timetracker.util.Dictionary.translate;
 
 @Service(Service.Level.PROJECT)
 public final class TrackerController {
-    
+
     private final TrackingService trackingService;
 
     public TrackerController(@NotNull Project project) {
         this.trackingService = project.getService(TrackingService.class);
-    }
-
-    public String getDescription() {
-        return trackingService.getDescription();
     }
 
     public String getBranch() {
@@ -63,11 +59,11 @@ public final class TrackerController {
         mainPanel.add(fieldsPanel, BorderLayout.NORTH);
         mainPanel.add(descriptionPanel, BorderLayout.CENTER);
 
-        int result = JOptionPane.showConfirmDialog(null, mainPanel, translate("session.edit"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(null, mainPanel, translate("session.edit"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            trackingService.setName(nameField.getText());
-            trackingService.setDescription(descriptionArea.getText());
+            trackingService.editCurrentSession(nameField.getText(), descriptionArea.getText());
         }
     }
 

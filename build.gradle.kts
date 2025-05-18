@@ -39,6 +39,9 @@ repositories {
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
     testImplementation(libs.junit)
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("org.apache.poi:poi:5.2.3")
+    implementation("org.apache.poi:poi-ooxml:5.2.3")
 
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
@@ -49,10 +52,6 @@ dependencies {
 
         // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
         plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
-
-        implementation("com.squareup.okhttp3:okhttp:4.9.3")
-        implementation("org.apache.poi:poi:5.2.3")
-        implementation("org.apache.poi:poi-ooxml:5.2.3")
 
         pluginVerifier()
         zipSigner()

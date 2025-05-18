@@ -2,6 +2,9 @@ package com.github.luckybard.timetracker.ui.table;
 
 import com.github.luckybard.timetracker.model.Session;
 import com.github.luckybard.timetracker.service.SessionService;
+import com.github.luckybard.timetracker.ui.table.button.DeleteSessionButton;
+import com.github.luckybard.timetracker.ui.table.button.EditSessionButton;
+import com.github.luckybard.timetracker.ui.table.button.SendToJiraButton;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
@@ -14,13 +17,13 @@ import java.util.List;
 
 import static com.github.luckybard.timetracker.util.Dictionary.translate;
 
-public class TimeTrackerTable {
+public class TrackerTable {
 
     private final JBTable table;
     private final DefaultTableModel tableModel;
     private final SessionService sessionService;
 
-    public TimeTrackerTable(@NotNull Project project) {
+    public TrackerTable(@NotNull Project project) {
         this.sessionService = project.getService(SessionService.class);
         this.tableModel = new DefaultTableModel(new String[]{
                 translate("id"),
