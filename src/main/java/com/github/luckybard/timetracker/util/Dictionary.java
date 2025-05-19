@@ -1,16 +1,21 @@
 package com.github.luckybard.timetracker.util;
 
-import com.intellij.BundleBase;
+import com.intellij.DynamicBundle;
 
-import java.util.ResourceBundle;
-
-public class Dictionary {
+public class Dictionary extends DynamicBundle {
 
     private static final String BUNDLE = "dict.dictionary";
+
     public static final String COLON_WITH_SPACE = ": ";
 
+    private Dictionary() {
+        super(BUNDLE);
+    }
+
+    private static final Dictionary INSTANCE = new Dictionary();
+
     public static String translate(String key) {
-        return BundleBase.message(ResourceBundle.getBundle(BUNDLE), key);
+        return INSTANCE.getMessage(key);
     }
 }
 
