@@ -48,7 +48,7 @@ public class SessionTable {
         table.clearSelection();
     }
 
-    public JScrollPane getTableScrollPane() {
+    public JScrollPane prepareSessionTable() {
         return new JBScrollPane(table);
     }
 

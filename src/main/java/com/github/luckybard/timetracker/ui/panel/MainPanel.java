@@ -40,11 +40,7 @@ public class MainPanel {
 
     private void initializePanel() {
         panel.add(navigationPanel.prepareNavigationPanel(), BorderLayout.NORTH);
-        panel.add(prepareSessionTablePanel(), BorderLayout.CENTER);
-    }
-
-    private JScrollPane prepareSessionTablePanel() {
-        return sessionTable.getTableScrollPane();
+        panel.add(sessionTable.prepareSessionTable(), BorderLayout.CENTER);
     }
 
     private void initializeUIUpdater(Project project) {
