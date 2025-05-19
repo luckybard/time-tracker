@@ -17,13 +17,13 @@ import java.util.List;
 
 import static com.github.luckybard.timetracker.util.Dictionary.translate;
 
-public class TrackerTable {
+public class SessionTable {
 
     private final JBTable table;
     private final DefaultTableModel tableModel;
     private final SessionService sessionService;
 
-    public TrackerTable(@NotNull Project project) {
+    public SessionTable(@NotNull Project project) {
         this.sessionService = project.getService(SessionService.class);
         this.tableModel = new DefaultTableModel(new String[]{
                 translate("id"),

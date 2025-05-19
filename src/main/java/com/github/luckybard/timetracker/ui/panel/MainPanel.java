@@ -1,7 +1,7 @@
 package com.github.luckybard.timetracker.ui.panel;
 
 import com.github.luckybard.timetracker.controller.*;
-import com.github.luckybard.timetracker.ui.table.TrackerTable;
+import com.github.luckybard.timetracker.ui.table.SessionTable;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,7 +11,6 @@ import java.time.Duration;
 import java.time.Instant;
 
 import static com.github.luckybard.timetracker.ui.ComponentsProvider.*;
-import static com.github.luckybard.timetracker.ui.panel.NavigationPanel.prepareNavigationPanel;
 import static com.github.luckybard.timetracker.util.Dictionary.COLON_WITH_SPACE;
 import static com.github.luckybard.timetracker.util.Dictionary.translate;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -20,23 +19,18 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 public class MainPanel {
 
     private final JPanel panel;
-    private final TrackerTable sessionTable;
+    private final SessionTable sessionTable;
+    private final NavigationPanel navigationPanel;
 
-    private final ExcelController excelController;
     private final TrackerController trackerController;
-    private final SessionController sessionController;
-    private final PropertiesController propertiesController;
 
     public MainPanel(@NotNull Project project) {
-        this.excelController = project.getService(ExcelController.class);
         this.trackerController = project.getService(TrackerController.class);
-        this.sessionController = project.getService(SessionController.class);
-        this.propertiesController = project.getService(PropertiesController.class);
-        this.sessionTable = new TrackerTable(project);
+        this.sessionTable = new SessionTable(project);
         this.panel = new JPanel(new BorderLayout());
+        this.navigationPanel = new NavigationPanel(project);
 
         initializePanel();
-        addButtonsListener();
         initializeUIUpdater(project);
     }
 
@@ -45,7 +39,7 @@ public class MainPanel {
     }
 
     private void initializePanel() {
-        panel.add(prepareNavigationPanel(), BorderLayout.NORTH);
+        panel.add(navigationPanel.prepareNavigationPanel(), BorderLayout.NORTH);
         panel.add(prepareSessionTablePanel(), BorderLayout.CENTER);
     }
 
@@ -56,15 +50,6 @@ public class MainPanel {
     private void initializeUIUpdater(Project project) {
         Timer uiUpdateTimer = new Timer(1000, e -> updateUI(project));
         uiUpdateTimer.start();
-    }
-
-    private void addButtonsListener() {
-        getStopTrackingButton().addActionListener(e -> trackerController.stopTracking());
-        getStartTrackingButton().addActionListener(e -> trackerController.startTracking());
-        getClearHistoryButton().addActionListener(e -> sessionController.clearSessions());
-        getEditCurrentSessionButton().addActionListener(e -> trackerController.editCurrentSession());
-        getGlobalSettingsButton().addActionListener(e -> propertiesController.changeSettings());
-        getExportButton().addActionListener(e -> excelController.promptUserAndExport());
     }
 
     private void updateUI(Project project) {

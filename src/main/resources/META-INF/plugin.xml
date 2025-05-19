@@ -9,7 +9,7 @@
     <resource-bundle>dict.dictionary</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Time Tracker" icon="AllIcons.Toolwindows.ToolWindowDebugger"
+        <toolWindow id="Time Tracker"
                     factoryClass="com.github.luckybard.timetracker.ui.TimeTrackerToolWindowFactory"/>
 
         <projectService serviceImplementation="com.github.luckybard.timetracker.storage.SessionStorage"/>
