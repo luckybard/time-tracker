@@ -79,7 +79,7 @@ public final class TrackingService {
 
     public void editCurrentSession(String name, String description) {
         logger.info("TrackingService::editCurrentSession()");
-        setBranch(name);
+        setName(name);
         setDescription(description);
     }
 

@@ -36,7 +36,7 @@ public final class ExcelController {
 
     private File promptUserForFile() {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("excel.save.file");
+        fileChooser.setDialogTitle(translate("excel.save.file"));
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Excel Files", "xlsx"));
         int userSelection = fileChooser.showSaveDialog(null);
 

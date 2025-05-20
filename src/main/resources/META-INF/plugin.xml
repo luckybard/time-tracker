@@ -18,11 +18,11 @@
         <postStartupActivity implementation="com.github.luckybard.timetracker.activity.PluginProjectActivity"/>
     </extensions>
 
-    <applicationListeners>
+    <projectListeners>
         <listener
                 class="com.github.luckybard.timetracker.listener.ProjectCloseListener"
                 topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </applicationListeners>
+    </projectListeners>
 
     <actions>
         <action id="com.github.luckybard.timetracker.action.StartTrackingAction"

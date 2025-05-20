@@ -20,7 +20,7 @@ public final class SessionController {
 
     public void clearSessions() {
         int confirm = JOptionPane.showConfirmDialog(null, translate("session.history.clear.confirm"),
-                "session.history.clear.title", JOptionPane.YES_NO_OPTION);
+                translate("session.history.clear.title"), JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             state.sessions.clear();
             JOptionPane.showMessageDialog(null, translate("session.history.cleared"));
